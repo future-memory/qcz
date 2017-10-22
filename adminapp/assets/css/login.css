@@ -1,0 +1,36 @@
+html,body { width:100%; height:100%;}
+body { background:#fff;margin:0;}
+
+#wrap{background-color: #999; height: 100%;}
+
+.login-form{position: relative; margin: auto;background: #fff; padding: 10px 25px; -webkit-border-radius:5px; -moz-border-radius:5px; border-radius: 5px; 
+width: 275px; }
+.frm label{display: block; font-size: 14px; font-weight: bold; color: #707070; margin-bottom: 5px;}
+.frm .ipt{width: 245px; padding-right: 20px;}
+.frm .ipt-s{width: 80px;}
+.frm .ipt,
+.frm .ipt-s{padding: 2px 4px; height: 30px; *line-height: 30px; border: 1px solid #d9d9d9;}
+.frm .ipt{width: 245px; padding-right: 20px;}
+.frm .ipt-uname,
+.frm .ipt-pwd{background: url(../images/login/login_icons.gif) 100% 0 no-repeat;position: absolute; width: 16px;height: 23px;right: 8px;top:30px;}
+.frm .ipt-uname{background-position: 100% 4px;}
+.frm .ipt-pwd{background-position: 99% -35px;}
+.frm a{color: #528ee7;}
+.frm{margin-bottom: 10px; position: relative; zoom:1;}
+.frm .checkcode-img{margin-top: -5px; *margin-top: 0; *vertical-align: -6px; width: 55px; height: 28px;}
+.mb5{margin-bottom: 5px;}
+
+#vcode img{width:67px;height:28px;}
+
+.forget-pwd{position: absolute; right: 0; top: 0;top:0; }
+.frm .lb-chk{font-size: 12px; font-weight: normal;}
+.lb-chk input{margin-right: 5px; vertical-align: -3px;}
+.error-frm{color: #f3410d; font-weight: auto; display: inline-block; min-height: 20px;
+ background: url(../images/login/login_icons.gif) 0 -80px no-repeat; padding-left: 20px;}
+.btn-login{background:transparent url(../images/login/login_button.png); background-position: 0 0; display: inline-block; *display: inline; *zoom:1;
+width: 273px; height: 37px; font-size:20px; color: #FFF; padding: 0; border: 0 none; cursor: pointer ;}
+.btn-login:hover{background-position: 0 -37px;}
+.btn-cp{position: absolute; right: 0;}
+
+
+.footer{text-align:center; padding:10px 0 10px 0; color: #9b9b9b;}
