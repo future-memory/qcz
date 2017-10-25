@@ -5,7 +5,7 @@ class MiscDataDao extends BaseDao
 
     public function __construct() 
     {
-		$this->_table     = 'app_misc_data';
+		$this->_table     = 'misc_data';
 		$this->_pk        = 'id';
 		$this->_cache_ttl = 600;
 		parent::__construct();
