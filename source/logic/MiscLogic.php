@@ -127,13 +127,35 @@ class MiscLogic extends Logic
 	}
 
 	//获取数据列表
-	public function get_data_list($key, $start, $limit)
+	public function get_data_by_key($key)
 	{
-		$data = $this->_dao->get_list($key, $start, $limit);
-		foreach ($data as $key => $value) {
-			$data[$key]['pic'] = HelperUtils::get_pic_url($value['pic'], 'app');
+		$info = ObjectCreater::create('MiscSubjectDao')->fetch($key);
+		$env  = $this->get_client_envirnment();
+
+		$limit = isset($info['random']) && $info['random'] ? 100 : (isset($info) && isset($info['show_count']) ? intval($info['show_count']) : 10);
+
+		$list = $this->_dao->get_list($key, $start, $limit, $env);
+
+		if(isset($info['random']) && $info['random']){
+			$show_count = isset($info) && isset($info['show_count']) ? intval($info['show_count']) : 10;
+			shuffle($list);
+			$list = array_slice($list, 0, $show_count);
 		}
-		return $data;	
+
+		foreach ($list as $key => $value) {
+			if ((int)$info['expire'] > 0 && TIMESTAMP >= intval($value['expire'])) {
+				unset($list[$key]);
+				continue;
+			}
+			if ((int)$info['start_time'] > 0 && TIMESTAMP < intval($value['start_time'])) {
+				unset($list[$key]);
+				continue;
+			}
+
+			$list[$key]['pic'] = HelperUtils::get_pic_url($value['pic'], 'app');
+		}
+		
+		return $list;	
 	}
 
 }
