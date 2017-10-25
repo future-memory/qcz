@@ -558,7 +558,6 @@ class HelperUtils
 
 	public static function get_pic_url($filepath, $type='app')
 	{
-		// $filepath = preg_replace('/^(http||https):/i', '', $filepath);
 		if(!$filepath){
 			return null;
 		}
@@ -566,14 +565,7 @@ class HelperUtils
 			return $filepath;
 		}
 
-		$remote = 0;
-		$path   = $filepath;
-		if(strrpos($filepath, '|')!==false){
-			$arr    = explode('|', $filepath);
-			$remote = intval($arr[0]);
-			$path   = $arr[1];
-		}
-		$img_url = FILE_CDN_URL . ltrim(strpos($path, $type)!==false ? '' : $type.'/', '/') . ltrim($path, '/');
+		$img_url = FILE_DOMAIN . ltrim($filepath, '/');
 		return $img_url;
 	}
 

@@ -99,5 +99,5 @@ class HelperQRCode
 		}
 
 		return self::$qr_path;
-	}	
+	}
 }

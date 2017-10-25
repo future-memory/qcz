@@ -35,8 +35,7 @@
           <th>链接</th>
           <th width="80px">图片</th>
           <th width="80px">环境</th>
-          <th width="140px">拓展字段</th>
-          <th width="80px">操作</th>
+          <th width="100px">操作</th>
         </tr>
       </thead>
       <tbody>
@@ -54,16 +53,6 @@
           <td>
             <?php if (in_array($key, $this->gray_keys)): ?>
             <?=$item['envirnment'] == 1  ? '灰度' : '线上'?>
-            <?php endif ?>
-          </td>
-          <td>
-            <?php if ($item['extdata']): ?>
-            <?php $_json = json_decode($item['extdata'], true);?>
-            <?php foreach ($_json as $_k => $_v): ?>
-            <?="[".$_k?> => <?=$_v."]"?>
-            <?php endforeach ?>
-            <?php else: ?>
-            -
             <?php endif ?>
           </td>
           <td>
@@ -307,7 +296,7 @@
       $.ajax({
         type: "POST",
         url: 'index.php?wants_json=true',
-        data: 'mod=attachment&action=upyun_sign&module=app',
+        data: 'mod=attachment&action=local_sign&module=misc&filename='+file_data.name,
         dataType: 'json',
         error: function(request) {
           is_uploading = false;
@@ -316,8 +305,7 @@
         success: function(res) {
           if(res && res.code==200){
 
-            form_data.append('signature', res.data.signs[0].signature);
-            form_data.append('policy', res.data.signs[0].policy);
+            form_data.append('filepath', res.data.filepath);
 
             $.ajax({
               url: res.data.url,
@@ -330,21 +318,15 @@
               error: function(request) {
                 is_uploading = false;
                 request = JSON.parse(request.responseText);
-                submit_alert('上传图片错误: ' + request.messagerequest.message);
+                submit_alert('上传图片错误: ' + request.error);
               },
               success: function(_res){
-                _res = _res.replace(/image-/g, 'image_');
+                //_res = _res.replace(/image-/g, 'image_');
                 _res = JSON.parse(_res);
-                if (_res && _res.code == 200) {
-                  if (allow_pic_height && allow_pic_width && _res.image_height && _res.image_width) {
-                    if (false && (allow_pic_height != _res.image_height || allow_pic_width != _res.image_width)) {
-                      is_post = false;
-                      submit_alert('图片尺寸长宽不符合主题');
-                      return false;
-                    } else {
-                      post_data(_res.url);
-                    }
-                  }
+                if (_res && _res.data && _res.data.filepath) {
+                  post_data(_res.data.filepath);
+                }else{
+                  submit_alert(_res.error);
                 }
               }
              });
@@ -370,7 +352,6 @@
       if (extdata[0]) {
         data += '&extdata=' + JSON.stringify(extdata);
       }
-      console.log(data);
       $.ajax({
         type: "POST",
         url: "index.php?mod=misc&action=post_data&wants_json=true",

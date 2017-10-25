@@ -2,6 +2,10 @@
 
 class AttachmentController extends AdminController 
 {
+    public function __construct()   
+    {
+        $this->logic = ObjectCreater::create('AttachmentLogic');
+    }
  
     /**
      * @api {post} /index.php?mod=photo&action=upyun_sign 又拍云上传参数签名
@@ -33,7 +37,7 @@ class AttachmentController extends AdminController
     public function upyun_sign()
     {
         $file_num = (int)$this->get_param('file_num', 0);
-        $module   = $this->get_param('module', 'forum');
+        $module   = $this->get_param('module', 'misc');
         $member = ObjectCreater::create('AdminLogic')->get_current_member();
         //判断是否登录
         $this->throw_error(!$member['uid'], array('code'=>401, 'message'=>'请先登录！'));
@@ -47,5 +51,56 @@ class AttachmentController extends AdminController
         $this->render_json(array('code'=>200,'data'=>$data));        
 
     }
+
+    public function qiniu_sign()
+    {
+        $module = $this->get_param('module', 'misc');
+        $name   = $this->get_param('filename');
+        $member = ObjectCreater::create('AdminLogic')->get_current_member();
+        //判断是否登录
+        $this->throw_error(!$member['uid'], array('code'=>401, 'message'=>'请先登录！'));
+
+        $bucket = 'qcz-file';
+        $token  = ObjectCreater::create('HelperQiniu')->sign($bucket, $module, $name);
+        $url    = 'https://up.qbox.me';//'http://up.qiniu.com';
+
+        $this->render_json(array('code'=>200,'data'=>array('token'=>$token, 'key'=>$name, 'url'=>$url)));           
+    }
+
+    public function local_sign()
+    {
+        $module = $this->get_param('module', 'misc');
+        $name   = $this->get_param('filename');
+        $member = ObjectCreater::create('AdminLogic')->get_current_member();
+        //判断是否登录
+        $this->throw_error(!$member['uid'], array('code'=>401, 'message'=>'请先登录！'));
+
+        $module = !in_array($module, $this->logic::$modules) ? $this->logic::$default_module : $module;
+        
+        $path = $module.'/'.date('Y/m/d/His');
+        $ext  = substr($name, strrpos($name, '.'));
+        $name = $path.HelperAuth::random(6).$ext;
+        
+        $url  = 'index.php?mod=attachment&action=upload';//'http://up.qiniu.com';
+
+        $this->render_json(array('code'=>200,'data'=>array('filepath'=>$name, 'url'=>$url)));       
+    }
+
+    public function upload()
+    {
+        $filepath = $this->get_param('filepath');
+
+        $this->throw_error(!$filepath, array('code'=>400, 'message'=>'参数错误'));
+        $this->throw_error(!$_FILES['file']['tmp_name'], array('code'=>400, 'message'=>'请选择要上传的文件'));
+
+        $member = ObjectCreater::create('AdminLogic')->get_current_member();
+        $this->throw_error(!$member['uid'], array('code'=>401, 'message'=>'请先登录！'));
+
+
+        $this->logic->upload($filepath, $_FILES['file']['tmp_name']);
+
+        $this->render_json(array('code'=>200, 'data'=>array('filepath'=>$filepath)));  
+    }
+
 
 }
