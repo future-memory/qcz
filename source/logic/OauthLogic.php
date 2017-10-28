@@ -79,6 +79,7 @@ class OauthLogic extends Logic
 	{
 		$cache_token = ObjectCreater::create('MemberDao')->get_session_token_cache($code);
 		if($cache_token){
+			HelperLog::writelog('weapp_token', 'cache_token:'.var_export($cache_token, true));
 			return $cache_token;
 		}
 
