@@ -77,9 +77,7 @@ class AttachmentController extends AdminController
 
         $module = !in_array($module, $this->logic::$modules) ? $this->logic::$default_module : $module;
         
-        $path = $module.'/'.date('Y/m/d/His');
-        $ext  = substr($name, strrpos($name, '.'));
-        $name = $path.HelperAuth::random(6).$ext;
+        $name = $this->logic->get_filepath($module, $name);
         
         $url  = 'index.php?mod=attachment&action=upload';//'http://up.qiniu.com';
 
@@ -97,7 +95,7 @@ class AttachmentController extends AdminController
         $this->throw_error(!$member['uid'], array('code'=>401, 'message'=>'请先登录！'));
 
 
-        $this->logic->upload($filepath, $_FILES['file']['tmp_name']);
+        $this->logic->upload($filepath, $_FILES['file']);
 
         $this->render_json(array('code'=>200, 'data'=>array('filepath'=>$filepath)));  
     }

@@ -1,5 +1,6 @@
 <?php
-class ShopController extends AdminController {
+class ShopController extends AdminController 
+{
 	public $order_status_array = array(
 		9 => '未审核',	
 		1 => '审核通过', 
@@ -13,23 +14,25 @@ class ShopController extends AdminController {
 	private $_base_url = 'index.php?mod=shop';
 
 	public $tabs = array(
-		'index' => '订单列表',
-		'goods' => '商品列表',
-		'edit_goods' => '添加商品',
-		'goods_type' => '商品类型',
+		'index'           => '订单列表',
+		'goods'           => '商品列表',
+		'edit_goods'      => '添加商品',
+		'goods_type'      => '商品类型',
 		'edit_goods_type' => '添加类型',
-		);
+	);
 
 	public $current_action = 'index';
 
-	public function __construct() {
+	public function __construct() 
+	{
 		parent::__construct();
 
 		$this->current_action = Nice::app()->getAction();
 		$this->_logic = ObjectCreater::create('ShopLogic');
 	}
 
-	public function index() {
+	public function index() 
+	{
 		$page       = (int)$this->get_param('page', 1);
 		$limit      = (int)$this->get_param('limit', 15);
 		$start      = $page > 1 ? ($page-1) * $limit : 0;
@@ -68,7 +71,8 @@ class ShopController extends AdminController {
 		include(APP_ROOT . '/template/shop/order.php');
 	}
 
-	public function export() {
+	public function export() 
+	{
         ob_end_clean();
 
 		$limit      = 1000;
@@ -160,7 +164,8 @@ class ShopController extends AdminController {
 	}
 
 
-	public function goods() {
+	public function goods() 
+	{
 		$type        = (int)$this->get_param('type', 0);
 		$page        = (int)$this->get_param('page', 1);
 		$limit       = (int)$this->get_param('limit', 15);
@@ -180,10 +185,10 @@ class ShopController extends AdminController {
 		include(APP_ROOT . '/template/shop/goods.php');
 	}
 
-	public function edit_goods() {
-
-		$id                = (int)$this->get_param('id', 0);
-		$info              = $id ? $this->_logic->get_goods_by_id($id) : array();
+	public function edit_goods() 
+	{
+		$id   = (int)$this->get_param('id', 0);
+		$info = $id ? $this->_logic->get_goods_by_id($id) : array();
 		if(!empty($info)){
 			$info['cover_pic'] = isset($info['cover_pic']) && $info['cover_pic'] ? HelperUtils::get_pic_url($info['cover_pic'], 'shop') : null;
 			$info['goods_pic'] = isset($info['goods_pic']) && $info['goods_pic'] ? HelperUtils::get_pic_url($info['goods_pic'], 'shop') : null;
@@ -196,10 +201,10 @@ class ShopController extends AdminController {
 		include(APP_ROOT . '/template/shop/edit_goods.php');	
 	}
 
-	public function edit_goods_count() {
-
-		$id                = (int)$this->get_param('id', 0);
-		$info              = $id ? $this->_logic->get_goods_by_id($id) : array();
+	public function edit_goods_count() 
+	{
+		$id   = (int)$this->get_param('id', 0);
+		$info = $id ? $this->_logic->get_goods_by_id($id) : array();
 
 		include(APP_ROOT . '/template/shop/edit_goods_count.php');	
 	}
@@ -237,24 +242,20 @@ class ShopController extends AdminController {
 
 		if($_FILES['cover_pic']['name']){
 			//缩略图
-			$cover_pic = ObjectCreater::create('HelperUpyun')->save($_FILES['cover_pic'], 'shop', $allow_size = 102400);
-			parent::throw_error(!is_array($cover_pic) || !isset($cover_pic['attachment']) || empty($cover_pic['attachment']), array(
-				'code' => 403,
-				'message' => '上传图片失败: '.@json_encode($cover_pic),
-				));
-			// 兼容旧URL格式
-			$data['cover_pic'] = '0|'.str_replace('/shop/', '', $cover_pic['attachment']);
+			$path = $this->logic->get_filepath('shop', $_FILES['cover_pic']['name']);
+			$res  = $this->logic->upload($path, $_FILES['cover_pic']);
+			parent::throw_error(!$res, array('code'=>500, 'message'=>'上传图片失败'));
+
+			$data['cover_pic'] = $path;
 		}
 
 		if($_FILES['goods_pic']['name']){
 			//大图
-			$goods_pic = ObjectCreater::create('HelperUpyun')->save($_FILES['goods_pic'], 'shop', $allow_size = 512000);
-			parent::throw_error(!is_array($goods_pic) || !isset($goods_pic['attachment']) || empty($goods_pic['attachment']), array(
-				'code' => 403,
-				'message' => '上传图片失败: '.@json_encode($goods_pic),
-				));
-			// 兼容旧URL格式
-			$data['goods_pic'] = '0|'.str_replace('/shop/', '', $goods_pic['attachment']);		
+			$path = $this->logic->get_filepath('shop', $_FILES['goods_pic']['name']);
+			$res  = $this->logic->upload($path, $_FILES['goods_pic']);
+			parent::throw_error(!$res, array('code'=>500, 'message'=>'上传图片失败'));
+			
+			$data['goods_pic'] = $path;	
 		}
 
 		if($id){
