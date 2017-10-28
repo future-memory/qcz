@@ -30,10 +30,10 @@ class AttachmentLogic extends Logic
 		foreach ($paths as $folder){
 			if(preg_match('/^[0-9a-z]{1,40}$/iu', $folder)){
 				self::$path .= $folder.'/';
-				if(!is_dir(BASE_ROOT.'/data/attach/'.self::$path)){
-					@mkdir(BASE_ROOT.'/data/attach/'.self::$path, 0755);
+				if(!is_dir(SITE_ROOT.'/data/attach/'.self::$path)){
+					@mkdir(SITE_ROOT.'/data/attach/'.self::$path, 0755);
 				}
-				if(!is_dir(BASE_ROOT.'/data/attach/'.self::$path)){
+				if(!is_dir(SITE_ROOT.'/data/attach/'.self::$path)){
 					self::$path = '';
 					return false;
 				}
@@ -47,7 +47,7 @@ class AttachmentLogic extends Logic
 	public function get_filepath($module, $filename)
 	{
         $path = $module.'/'.date('Y/m/d/His');
-        $ext  = substr($name, strrpos($name, '.'));
+        $ext  = substr($filename, strrpos($filename, '.'));
         $name = $path.HelperAuth::random(6).$ext;
 
         return $name;
@@ -57,14 +57,10 @@ class AttachmentLogic extends Logic
 	public function upload($path, $file, $allow_size=1000000)
 	{
 		if(!self::check_path($path)){
-			var_dump($path);
 			return false;
 		}
 
-		$target = BASE_ROOT.'/data/attach/'.trim($path, '/');
-
-var_dump($file['tmp_name']);
-var_dump($target);
+		$target = SITE_ROOT.'/data/attach/'.trim($path, '/');
 
 		if(@copy($file['tmp_name'], $target)) {
 			return true;

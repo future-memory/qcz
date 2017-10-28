@@ -10,6 +10,8 @@
 define('APP_ROOT', dirname(__FILE__));
 //基础路径  （注意 不是框架路径）
 define('BASE_ROOT', dirname(__FILE__));
+//基础路径  （注意 不是框架路径）
+define('SITE_ROOT', dirname(dirname(__FILE__)));
 
 //应用个性化配置
 //域名
