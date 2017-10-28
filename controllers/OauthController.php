@@ -89,8 +89,8 @@ class OauthController extends BaseController
 		$code = $this->get_param('code');
 
 		try {
-			$tmp = ObjectCreater::create('OauthLogic')->get_weibo_token($code);
-			$tmp = ObjectCreater::create('OauthLogic')->get_weibo_user($tmp['uid'], $tmp['access_token']);
+			$tmp = $this->logic->get_weibo_token($code);
+			$tmp = $this->logic->get_weibo_user($tmp['uid'], $tmp['access_token']);
 		} catch (Exception $e) {
 			HelperLog::writelog('wbauth', var_export($e, true));
 			die('微博授权失败，请稍候再试！');
@@ -125,7 +125,7 @@ class OauthController extends BaseController
 	{
 		$code = $this->get_param('code');
 
-		$res = ObjectCreater::create('MemberLogic')->get_weapp_token($code);
+		$res = $this->logic->get_weapp_token($code);
 		$this->throw_error(!$res || !isset($res['openid']), array('code'=>500, 'message'=>'登录失败'));
 
 		$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($res['openid'], $this->_src_arr['wa']);
@@ -150,7 +150,7 @@ class OauthController extends BaseController
 		
 		$this->throw_error(!$iv || !$code || !$encryptedData, array('code'=>400, 'message'=>'参数错误'));
 
-		$res = ObjectCreater::create('MemberLogic')->get_weapp_token($code);
+		$res = $this->logic->get_weapp_token($code);
 		$this->throw_error(!$res || !isset($res['openid']), array('code'=>500, 'message'=>'登录失败'));
 
 		$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($res['openid'], $this->_src_arr['wa']);
