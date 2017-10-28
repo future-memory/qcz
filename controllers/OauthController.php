@@ -157,10 +157,7 @@ class OauthController extends BaseController
     	$mid  = $data['id'];
 
     	$user = $this->logic->get_weapp_user_info($res['session_key'], $iv, $encryptedData);
-
-    	HelperLog::writelog('weapp_token', 'reg:'.var_export($user, true).var_export($res, true));
-
-    	$this->throw_error(!$user || !isset($user['openid']) || $user['openId']!=$res['openid'], array('code'=>502, 'message'=>'登录失败'));
+    	$this->throw_error(!$user || !isset($user['openId']) || $user['openId']!=$res['openid'], array('code'=>502, 'message'=>'登录失败'));
 
     	$tmp = array(
 			'source'   => $this->_src_arr['wa'],
