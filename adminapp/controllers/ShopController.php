@@ -244,7 +244,7 @@ class ShopController extends AdminController
 			//缩略图
 			$path = $this->logic->get_filepath('shop', $_FILES['cover_pic']['name']);
 			$res  = $this->logic->upload($path, $_FILES['cover_pic']);
-			parent::throw_error(!$res, array('code'=>500, 'message'=>'上传图片失败'));
+			parent::throw_error(!$res, array('code'=>501, 'message'=>'上传图片失败'));
 
 			$data['cover_pic'] = $path;
 		}
@@ -253,7 +253,7 @@ class ShopController extends AdminController
 			//大图
 			$path = $this->logic->get_filepath('shop', $_FILES['goods_pic']['name']);
 			$res  = $this->logic->upload($path, $_FILES['goods_pic']);
-			parent::throw_error(!$res, array('code'=>500, 'message'=>'上传图片失败'));
+			parent::throw_error(!$res, array('code'=>502, 'message'=>'上传图片失败'));
 			
 			$data['goods_pic'] = $path;	
 		}
