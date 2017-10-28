@@ -144,34 +144,33 @@ class OauthController extends BaseController
 	//todo
 	public function weapp_reg()
 	{
-		$iv            = $this->get_param('iv');
-		$code          = $this->get_param('code');
+		$iv = $this->get_param('iv');
+		$code = $this->get_param('code');
 		$encryptedData = $this->get_param('encryptedData');
-		
+
 		$this->throw_error(!$iv || !$code || !$encryptedData, array('code'=>400, 'message'=>'参数错误'));
 
 		$res = $this->logic->get_weapp_token($code);
 		$this->throw_error(!$res || !isset($res['openid']), array('code'=>500, 'message'=>'登录失败'));
 
 		$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($res['openid'], $this->_src_arr['wa']);
-    	$mid  = $data['id'];
+		$mid  = $data['id'];
 
-    	$user = $this->logic->get_weapp_user_info($res['session_key'], $iv, $encryptedData);
-    	$this->throw_error(!$user || !isset($user['openId']) || $user['openId']!=$res['openid'], array('code'=>502, 'message'=>'登录失败'));
+		$user = $this->logic->get_weapp_user_info($res['session_key'], $iv, $encryptedData);
+		$this->throw_error(!$user || !isset($user['openId']) || $user['openId']!=$res['openid'], array('code'=>502, 'message'=>'登录失败'));
 
-    	$tmp = array(
+		$tmp = array(
 			'source'   => $this->_src_arr['wa'],
 			'username' => $user['nickName'],
 			'avatar'   => $user['avatarUrl']
     	);
     	ObjectCreater::create('MemberLogic')->update_member($mid, $tmp);
-	
-		$expire = 86400; 
+
+    	$expire = 86400; 
     	$token  = ObjectCreater::create('MemberLogic')->set_member_logined($mid, $expire);
 
     	$this->render_json(array('code'=>200, 'data'=>array('token'=>$token, 'expireAt'=>$expire+TIMESTAMP)));
 	}
-
 
 	//获取微信js签名
 	public function get_wb_js_conf()

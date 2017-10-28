@@ -1,4 +1,4 @@
-﻿﻿<?php
+﻿<?php
 
 /**
  * 对微信小程序用户加密数据的解密示例代码.
@@ -6,9 +6,7 @@
  * @copyright Copyright (c) 1998-2014 Tencent Inc.
  */
 
-
 include_once "errorCode.php";
-
 
 class WXBizDataCrypt
 {
@@ -66,4 +64,3 @@ class WXBizDataCrypt
 	}
 
 }
-
