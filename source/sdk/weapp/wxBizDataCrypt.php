@@ -1,5 +1,4 @@
 ﻿<?php
-
 /**
  * 对微信小程序用户加密数据的解密示例代码.
  *
@@ -24,7 +23,6 @@ class WXBizDataCrypt
 		$this->appid = $appid;
 	}
 
-
 	/**
 	 * 检验数据的真实性，并且获取解密后的明文.
 	 * @param $encryptedData string 加密的用户数据
@@ -38,29 +36,23 @@ class WXBizDataCrypt
 		if (strlen($this->sessionKey) != 24) {
 			return ErrorCode::$IllegalAesKey;
 		}
-		$aesKey=base64_decode($this->sessionKey);
+		$aesKey = base64_decode($this->sessionKey);
 
-        
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
 		}
-		$aesIV=base64_decode($iv);
-
-		$aesCipher=base64_decode($encryptedData);
-
-		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-
-		$dataObj=json_decode( $result );
-		if( $dataObj  == NULL )
-		{
+		$aesIV     = base64_decode($iv);
+		$aesCipher = base64_decode($encryptedData);
+		$result    = openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+		$dataObj   = json_decode( $result );
+		
+		if( $dataObj  == NULL ){
 			return ErrorCode::$IllegalBuffer;
 		}
-		if( $dataObj->watermark->appid != $this->appid )
-		{
+		if( $dataObj->watermark->appid != $this->appid ){
 			return ErrorCode::$IllegalBuffer;
 		}
 		$data = $result;
 		return ErrorCode::$OK;
 	}
-
 }
