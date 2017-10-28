@@ -57,10 +57,14 @@ class AttachmentLogic extends Logic
 	public function upload($path, $file, $allow_size=1000000)
 	{
 		if(!self::check_path($path)){
+			var_dump($path);
 			return false;
 		}
 
 		$target = BASE_ROOT.'/data/attach/'.trim($path, '/');
+
+var_export($file['tmp_name']);
+var_export($target);
 
 		if(@copy($file['tmp_name'], $target)) {
 			return true;
