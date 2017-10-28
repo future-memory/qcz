@@ -243,7 +243,7 @@ class MiscController extends AdminController
 
 		$expire     = is_numeric($expire) ? intval($expire) : strtotime($expire);
 		$start_time = is_numeric($start_time) ? intval($start_time) : strtotime($start_time);
-		$picurl     = $this->_get_compat_pic_url($this->get_param('picurl'));
+		$picurl     = $this->get_param('picurl');
 		$order      = (int)$this->get_param('order');
 
 		$this->throw_error(!$key, array(
