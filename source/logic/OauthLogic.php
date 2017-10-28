@@ -75,6 +75,47 @@ class OauthLogic extends Logic
 		return $res;
 	}
 
+	public function get_weapp_token($code)
+	{
+		$cache_token = ObjectCreater::create('MemberDao')->get_session_token_cache($code);
+		if($cache_token){
+			return $cache_token;
+		}
+
+		$config = HelperConfig::get_config('global::weapp');
+
+		$url = 'https://api.weixin.qq.com/sns/jscode2session?appid='.$config['appid'].'&secret='.$config['secret'].'&js_code='.$code.'&grant_type=authorization_code';
+		$res  = HelperUtils::https_post($url);
+		$json = json_decode($res, true);
+		if(!$json || !$json['openid']){
+			HelperLog::writelog('weapp_token', var_export($res, true));
+			return false;
+		}
+
+		ObjectCreater::create('MemberDao')->set_weapp_session_cache($code, $json);
+
+		return $json;
+	}
+
+	//获取微信用户信息
+	public function get_weapp_user_info($session_key, $iv, $encryptedData)
+	{
+		include_once BASE_ROOT."/source/sdk/weapp/wxBizDataCrypt.php";
+		$config = HelperConfig::get_config('global::weapp');
+
+		$data = null;
+		$pc   = new WXBizDataCrypt($config['appid'], $session_key);
+		$errCode = $pc->decryptData($encryptedData, $iv, $data);
+
+		if ($errCode == 0) {
+		    return json_decode($data, true);
+		}
+
+		//保存错误码
+		HelperLog::writelog('weapp_token', var_export($errCode, true));
+	}
+
+
 	//bbs-uc
 	public function get_bbsuc_auth_url($callback=null, $referer=null)
 	{

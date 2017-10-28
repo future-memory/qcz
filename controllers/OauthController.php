@@ -2,6 +2,12 @@
 
 class OauthController extends BaseController 
 {
+	private $_src_arr = array(
+		'fm' => 1,
+		'wx' => 2,
+		'wb' => 3,
+		'wa' => 4
+	);
 
 	public function __construct()
 	{
@@ -14,18 +20,19 @@ class OauthController extends BaseController
         $ticket  = $this->get_param('ticket');
         $referer = $this->get_param('referer');
 
-        $member = ObjectCreater::create('MemberLogic')->get_logined_member_by_ticket($ticket);
+        $logic  = ObjectCreater::create('MemberLogic');
+        $member = $logic->get_logined_member_by_ticket($ticket);
 
         if(!$member || !isset($member['code']) || $member['code'] != 200){
         	HelperLog::writelog('bbsauth', var_export($member, true));
         	die('登录失败，请稍候再试！');
         }
 
-    	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($member['data']['uid'], 1);
+    	$data = $logic->get_member_by_uid($member['data']['uid'], $this->_src_arr['fm']);
     	$mid  = $data['id'];
     	if(!$data){
         	$data = array(
-				'source'   => 1,
+				'source'   => $this->_src_arr['fm'],
 				'uid'      => $member['data']['uid'],
 				'username' => $member['data']['username'],
 				'avatar'   => HelperUtils::avatar($member['data']['uid'])
@@ -56,11 +63,11 @@ class OauthController extends BaseController
         	die('微信授权失败，请稍候再试！');
         }
 
-    	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($tmp['openid'], 2);
+    	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($tmp['openid'], $this->_src_arr['wx']);
     	$mid  = $data['id'];
     	if(!$data){
         	$data = array(
-				'source'   => 2,
+				'source'   => $this->_src_arr['wx'],
 				'uid'      => $tmp['openid'],
 				'username' => $tmp['nickname'],
 				'avatar'   => str_replace('http://', 'https://', $tmp['headimgurl'])
@@ -94,11 +101,11 @@ class OauthController extends BaseController
         	die('微博授权失败，请稍候再试！');
         }
 
-    	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($tmp['id'], 3);
+    	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($tmp['id'], $this->_src_arr['wb']);
     	$mid  = $data['id'];
     	if(!$data){
         	$data = array(
-				'source'   => 3,
+				'source'   => $this->_src_arr['wb'],
 				'uid'      => $tmp['id'],
 				'username' => $tmp['name'],
 				'avatar'   => str_replace('http://', 'https://', $tmp['profile_image_url'])
@@ -113,6 +120,59 @@ class OauthController extends BaseController
 
     	header('location: '.$referer);
 	}
+
+	public function weapp_login()
+	{
+		$code = $this->get_param('code');
+
+		$res = ObjectCreater::create('MemberLogic')->get_weapp_token($code);
+		$this->throw_error(!$res || !isset($res['openid']), array('code'=>500, 'message'=>'登录失败'));
+
+		$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($res['openid'], $this->_src_arr['wa']);
+    	$mid  = isset($data['id']) ? intval($data['id']) : 0;
+    	if(!$mid){
+        	$tmp = array(
+				'source' => $this->_src_arr['wa'],
+				'uid'    => $res['openid'],
+        	);
+        	ObjectCreater::create('MemberLogic')->insert_member($tmp);
+    	} 	
+
+    	$this->render_json(array('code'=>200, 'message'=>'ok'));
+	}
+
+	//todo
+	public function weapp_reg()
+	{
+		$iv            = $this->get_param('iv');
+		$code          = $this->get_param('code');
+		$encryptedData = $this->get_param('encryptedData');
+		
+		$this->throw_error(!$iv || !$code || !$encryptedData, array('code'=>400, 'message'=>'参数错误'));
+
+		$res = ObjectCreater::create('MemberLogic')->get_weapp_token($code);
+		$this->throw_error(!$res || !isset($res['openid']), array('code'=>500, 'message'=>'登录失败'));
+
+		$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($res['openid'], $this->_src_arr['wa']);
+    	$mid  = $data['id'];
+
+    	$user = $this->logic->get_weapp_user_info($res['session_key'], $iv, $encryptedData);
+
+    	$this->throw_error(!$user || !isset($user['openid']) || $user['openId']!=$res['openid'], array('code'=>502, 'message'=>'登录失败'));
+
+    	$tmp = array(
+			'source'   => $this->_src_arr['wa'],
+			'username' => $user['nickName'],
+			'avatar'   => $user['avatarUrl']
+    	);
+    	ObjectCreater::create('MemberLogic')->update_member($mid, $tmp);
+	
+		$expire = 86400; 
+    	$token  = ObjectCreater::create('MemberLogic')->set_member_logined($mid, $expire);
+
+    	$this->render_json(array('code'=>200, 'data'=>array('token'=>$token, 'expireAt'=>$expire+TIMESTAMP)));
+	}
+
 
 	//获取微信js签名
 	public function get_wb_js_conf()

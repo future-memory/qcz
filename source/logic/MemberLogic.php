@@ -31,11 +31,14 @@ class MemberLogic extends Logic
 	public function init_member()
 	{
 		$this->cur_member = array('id'=>0, 'uid'=>0);
-		$token = HelperCookie::get('auth');
+		
+		$token = isset($_SERVER['HTTP_AUTHTOKEN']) ? $_SERVER['HTTP_AUTHTOKEN'] : HelperCookie::get('auth');
+		$token = rawurldecode($token);
 		if($token){
 			$mid  = HelperAuth::authcode($token, 'DECODE', $this->authkey);
-			$user = $mid ? $this->_dao->fetch($mid) : array();
-
+			$info = $this->_dao->get_member_token_info($mid);
+			$tmp  = rawurlencode($token);
+			$user = $mid && !empty($info) && $info['token']==$tmp ? $this->_dao->fetch($mid) : array();
 			if(!empty($user)) {
 				$this->cur_member = array(
 					'id'       => $user['id'],
@@ -45,53 +48,26 @@ class MemberLogic extends Logic
 					'clientip' => HelperUtils::getClientIP(),
 				);
 			}
-		}else{
-			$this->init_member_by_bbstoken();
 		}
 	}
 
-
-	//使用bbstoken 获取登录用户
-	public function init_member_by_bbstoken()
-	{
-		$token_orgi = isset($_SERVER['HTTP_BBSTOKEN']) ? $_SERVER['HTTP_BBSTOKEN'] : HelperUtils::get_param('bbstoken');
-		$token = rawurldecode($token_orgi);
-		if($token){
-			$auth = explode("\t", HelperAuth::authcode($token, 'DECODE', $this->bbs_authkey));
-			list($discuz_pw, $discuz_uid) = empty($auth) || count($auth) < 2 ? array('', '') : $auth;
-			if($discuz_uid){
-				$info = $this->get_logined_member_by_token($token_orgi);
-				if($info && $info['code']==200){
-			    	$data = $this->get_member_by_uid($info['data']['uid'], 1);
-			    	$mid  = isset($data['id']) ? $data['id'] : 0;
-			    	if(!$data){
-			        	$data = array(
-							'source'   => 1,
-							'uid'      => $info['data']['uid'],
-							'username' => $info['data']['username'],
-							'avatar'   => HelperUtils::avatar($info['data']['uid'])
-			        	);
-			        	$mid = ObjectCreater::create('MemberLogic')->insert_member($data);
-			    	}
-
-			    	$mid && ObjectCreater::create('MemberLogic')->set_member_logined($mid);
-
-					$this->cur_member = array(
-						'id'       => $data['id'],
-						'uid'      => $data['uid'],
-						'avatar'   => $data['avatar'],
-						'username' => $data['username'],
-					);
-				}
-			}
-		}	
-	}
-
 	//登录
-	public function set_member_logined($mid)
+	public function set_member_logined($mid, $expire=86400, $setcookie=false)
 	{
-		HelperCookie::set('auth', HelperAuth::authcode("{$mid}", 'ENCODE', $this->authkey), 0, true);
+		$token = HelperAuth::authcode("{$mid}", 'ENCODE', $this->authkey);
+		$token = rawurlencode($token);
+		$data  = array(
+			'token'  => $token, 
+			'ip'     => HelperUtils::getClientIP()
+        );
+
+		$this->_dao->set_member_token_info($mid, $data, false, $expire);
+
+		$setcookie && HelperCookie::set('auth', $token, 0, true);
+
+		return $token;
 	}
+
 
 	//ticket获取当前登录用户信息
 	public function get_logined_member_by_ticket($ticket, $all_userinfo = '')
@@ -118,6 +94,14 @@ class MemberLogic extends Logic
 		$this->_dao->delete_member_cache($data['uid'], $data['source']);
 		return $this->_dao->insert($data, true);
 	}
+
+	//保存用户
+	public function update_member($mid, $data)
+	{
+		$this->_dao->delete_member_cache($data['uid'], $data['source']);
+		return $this->_dao->update($mid, $data);
+	}
+
 
 	//调整授权
 	public function gologin($referer = null)

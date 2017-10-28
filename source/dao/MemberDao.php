@@ -32,6 +32,48 @@ class MemberDao extends BaseDao
 		return $this->_memory->cmd('rm', $key);
 	}
 
+	public function set_member_token_info($uid, $data, $ttl=86400)
+	{
+		$redis = $this->_memory->get_memory_obj();
+		$key   = 'token_'.$uid;
+        $redis->hMset($key, $data);
+        $redis->expire($key, $ttl);
+        return true;	
+	}
+	
+	public function get_member_token_info($uid, $field='token')
+	{
+		$redis = $this->_memory->get_memory_obj();
+		$key   = 'token_'.$uid;
+        return $redis->hGetAll($key);
+        //return $this->_redis->hGet($key, $field);   
+	}
+
+	//刷新token
+	public function refresh_member_token_info($uid, $ttl=86400)
+	{
+		$redis = $this->_memory->get_memory_obj();
+		$key   = 'token_'.$uid;
+        $redis->expire($key, $ttl);
+        return true;	
+	}
+
+	public function set_weapp_session_cache($code, $data, $ttl=86400)
+	{
+		$redis = $this->_memory->get_memory_obj();
+		$key   = 'wa_session_'.md5($code);
+        $redis->hMset($key, $data);
+        $redis->expire($key, $ttl);
+        return true;	
+	}
+	
+	public function get_session_token_cache($code)
+	{
+		$redis = $this->_memory->get_memory_obj();
+		$key   = 'wa_session_'.md5($code);
+        return $redis->hGetAll($key);
+	}
+
 	//获取微信 js接口 token cache
 	public function get_js_token_cache($appid)
 	{

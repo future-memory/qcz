@@ -16,4 +16,9 @@ $_config['weixin'] = array(
 	'callback_url' => DOMAIN.'index.php?mod=oauth&action=wxcallback',
 );
 
+$_config['weapp'] = array(
+	'appid'  => 'wxb25d4117afe3d02e',
+	'secret' => '489eff15603c9f7a27a29e56156e4426'
+);
+
 return $_config;
