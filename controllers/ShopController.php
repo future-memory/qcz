@@ -74,6 +74,25 @@ class ShopController extends BaseController
 		include(APP_ROOT . '/template/shop/view.php');
 	}
 
+
+	/**
+	 * @api {get} /index.php?mod=shop&action=detail&id=xxx 商品详情
+	 * @apiName shopdetial
+	 * @apiGroup Shop
+	 * @apiVersion 2.0.0
+	 * @apiDescription 商品详情
+	 * 
+	*/
+	public function detail()
+	{
+		$id = (int)$this->get_param('id', 0);
+		$this->throw_error(!$id, array('code'=>400, 'message'=>'参数错误'));
+
+		$info = $this->logic->get_goods_info($id);
+
+		$this->render_json(array('code'=>200, 'data'=>$info));	
+	}
+
 	/**
 	 * @api {get} /index.php?mod=shop&action=goods_list 商品列表
 	 * @apiName goodslist
