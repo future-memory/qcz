@@ -48,8 +48,8 @@ class ShopLogic extends Logic
 	public function get_goods_info($goods_id)
 	{
 		$info              = $this->_dao->fetch($goods_id);
-		$info['cover_pic'] = HelperUtils::get_pic_url($info['cover_pic'], 'shop');
-		$info['goods_pic'] = HelperUtils::get_pic_url($info['goods_pic'], 'shop');
+		//$info['cover_pic'] = HelperUtils::get_pic_url($info['cover_pic'], 'shop');
+		$info['pics'] = array(HelperUtils::get_pic_url($info['goods_pic'], 'shop'));
 
 		return $info;		
 	}
