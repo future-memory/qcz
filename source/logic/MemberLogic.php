@@ -128,16 +128,21 @@ class MemberLogic extends Logic
 		header('location: '.$url);
 	}
 
-	public function get_member_source()
+
+	private function update_credit($uid, $credit, $op, $id=0) 
 	{
-		$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-		$source = 1;
-		if(strpos($user_agent, 'micromessenger')){
-			$source = 2;
-		}else if(strpos($user_agent, 'weibo')){
-			$source = 3;
+		$res = $this->_dao->update_credit($uid, $credit);
+		if($res){
+			$credit_log = array(
+				'uid'       => $uid,
+				'operation' => $op,
+				'relatedid' => $id,
+				'credit'    => $credit,
+				'dateline'  => TIMESTAMP,
+			);
+			return ObjectCreater::create('CreditLogDao')->insert_log($credit_log);
 		}
-		return $source;
+		return false;
 	}
 
 

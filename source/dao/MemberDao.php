@@ -26,6 +26,21 @@ class MemberDao extends BaseDao
 		return $data;
 	}
 
+	//更新积分
+	public function update_credit($id, $credit)
+	{
+		$credit = abs($credit);
+		$setsql = $credit<0 ? "credit=if(credit>$credit,credit+'$credit',0)" : "credit=credit+{$credit}";
+
+		$sql	= "UPDATE %t SET $setsql WHERE id=%d limit 1 ";
+		$res	= $this->_db->query($sql);
+		
+		$this->clear_cache($id);
+		
+		return $res;
+	}
+
+	//删除用户缓存
 	public function delete_member_cache($uid, $source)
 	{
 		$key = 'member_uid_'.$uid.'_'.$source;
