@@ -64,7 +64,7 @@ class OauthController extends BaseController
         }
 
     	$data = ObjectCreater::create('MemberLogic')->get_member_by_uid($tmp['openid'], $this->_src_arr['wx']);
-    	$mid  = $data['id'];
+    	$mid  = isset($data['id']) ? $data['id'] : null;
     	if(!$data){
         	$data = array(
 				'source'   => $this->_src_arr['wx'],
