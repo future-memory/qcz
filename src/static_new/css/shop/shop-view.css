@@ -1,0 +1,385 @@
+.container {
+	/*height: 100%;*/
+}
+
+.main {
+	padding-bottom: 60px;
+}
+
+.banner {
+	padding: 10% 0;
+	width: 100%;
+	background-color: #f0f0f0;
+	text-align: center;
+}
+.banner img {
+	max-width: 80%;
+}
+
+.infos {
+	padding: 30px 20px;
+}
+.goods-name {
+	float: left;
+	font-size: 16px;
+	font-weight: normal;
+}
+.goods-price {
+	float: right;
+	font-size: 16px;
+}
+
+.goods-price span {
+	color: #00C3F5;
+}
+.goods-price--origin {
+	margin-left: 10px;
+	font-size: 16px;
+	text-decoration: line-through;
+	color: #AAA;
+}
+.infos-tip {
+	margin-top: 24px;
+	color: #AAA;
+	line-height: 1.6;
+}
+.detail {
+	border-top: 1px solid #d9d9d9;
+	width: 100%;
+}
+.detail img {
+	width: 100%;
+}
+
+.btn-buy {
+	position: fixed;
+	bottom: 0;
+	height: 60px;
+	width: 100%;
+	border-top: 1px solid #f1f1f1;
+	background: #FFF;
+}
+.btn-buy span {
+	position: absolute;
+	left: 50%;
+	bottom: 11px;
+	display: block;
+	-webkit-transform: translate(-50%, 0);
+	color: #FFF;
+	font-size: 16px;
+	width: 240px;
+	height: 37px;
+	line-height: 37px;
+	background-color: #00C3F5;
+	text-align: center;
+	border-radius: 33px;
+}
+.btn-buy.disable span {
+	background-color: #a1a1a1;
+}
+
+.sep-sec {
+	height: 10px;
+	background-color: #f1f1f1;
+}
+
+/*订单编辑确认页*/
+.order-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 16px;
+	min-height: 100%;
+	background-color: #FFF;
+}
+
+.order-address {
+	position: relative;
+	min-height: 70px;
+	padding: 0 40px;
+	box-sizing: border-box;
+}
+.address-no {
+	line-height: 90px;
+	height: 90px;
+	text-align: left;
+	color: #777;
+	font-size: 16px;
+}
+.address-base {
+	position: relative;
+	margin-top: 8px;
+	font-size: 16px;
+	color: #777;
+}
+.address-name {
+	display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 130px;
+}
+.address-phone {
+	position: absolute;
+	right: 0;
+	top: 2px;
+}
+.address-detail {
+	margin: 4px 0 10px;
+	color: #777;
+}
+.icon-local {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: 14px;
+	height: 26px;
+}
+.icon-local img {
+	height: 100%;
+}
+.icon-arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 20px;
+	height: 20px;
+}
+.icon-arrow img {
+	height: 100%;
+}
+
+.control-wrap {
+	margin: 0 20px;
+}
+.control-wrap h2 {
+	border-left: 4px solid #00C3F5;
+	margin: 20px 0;
+	padding-left: 7px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #3d3d3d;
+}
+.order-info {
+	position: relative;
+	padding: 10px 16px;
+	background-color: #eaeaea;
+}
+.order-info img {
+	float: left;
+	width: 30%;
+}
+.order-info-txt {
+	margin-left: 34%;
+}
+
+.order-name {
+	font-size: 16px;
+	font-weight: normal;
+	line-height: 1.6;
+	color: #777;
+}
+
+.order-price {
+	color: #777;
+}
+
+.order-price span{
+	color: #00C3F5;
+}
+.order-price--origin {
+	margin-left: 10px;
+	font-size: 14px;
+	text-decoration: line-through;
+	color: #AAA;
+}
+.order-stock {
+	margin-top: 20px;
+	color: #AAA;
+}
+
+.controls {
+	position: relative;
+}
+.control {
+	position: relative;
+	line-height: 50px;
+	border-bottom: 1px solid #d5d5d5;
+}
+.control-name {
+	margin-left: 6px;
+	color: #777;
+}
+.control p {
+	position: absolute;
+	right: 6px;
+	top: 0;
+	color: #AAA;
+	text-align: center;
+}
+.control-minus,.control-plus {
+	display: inline-block;
+	text-align: center;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	background-color: #eaeaea;
+}
+.control-num {
+	padding: 0 20px;
+	font-size: 20px;
+}
+.order-container .btn-buy {
+	margin-top: 60px;
+}
+
+.btn-buy-commit {
+	display: block;
+	color: #FFF;
+	font-size: 16px;
+	width: 240px;
+	height: 37px;
+	line-height: 37px;
+	margin: 72px 60px 0;
+	background-color: #00C3F5;
+	text-align: center;
+	border-radius: 33px;
+}
+.btn-buy-commit.disable {
+	background-color: #a1a1a1;
+}
+
+/*收获人信息编辑页*/
+.address-edit {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #FFF;
+}
+.fields {
+	position: relative;
+	height: 100%;
+	margin: 6px 10px 0;
+	font-size: 16px;
+}
+
+.field {
+	height: 46px;
+	border-bottom: 1px solid #f1f1f1;
+}
+.key {
+	position: absolute;
+	margin-left: 16px;
+	line-height: 48px;
+	color: #777;
+}
+.value-input {
+	margin-left: 96px;
+	height: 46px;
+	position: relative;
+}
+.value-input input {
+	width: 100%;
+	height: 44px;
+	font-size: 16px;
+	padding: 0;
+	border: none;
+	background-color: transparent;
+}
+
+.error-tips {
+	position: absolute;
+	bottom: 1px;
+	left: 0;
+	font-size: 10px;
+	color: red;
+}
+
+.field-textarea {
+	height: auto;
+	border-bottom: none;
+}
+.field-textarea .key {
+	display: block;
+	position: relative;
+}
+.field-textarea .value-input{
+	height: auto;
+	margin-left: 4px;
+	padding: 4px;
+	background-color: #f7f7f7;
+}
+.field-textarea .value-input textarea {
+	display: block;
+	width: 100%;
+	height: 130px;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	background-color: #f7f7f7;
+}
+
+.btn-submit {
+	position: absolute;
+	bottom: 30px;
+	left: 50%;
+	-webkit-transform: translate(-50%,0);
+	transform: translate(-50%,0);
+	border-radius: 33px;
+	border: none;
+	text-align: center;
+	font-size: 16px;
+	height: 37px;
+	line-height: 37px;
+	width: 240px;
+	color: #FFF;
+	background-color: #00C3F5;
+}
+
+.dialog {
+	position: absolute;
+	display: none;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	padding: 14px;
+	font-size: 14px;
+	text-align: center;
+	color: #FFF;
+	background-color: rgba(0,0,0,.8);
+	border-radius: 4px;
+	z-index: 9999;
+}
+
+.simple-dialog-conten {
+	font-size: 14px;
+	padding: 10px;
+}
+
+.verify {
+	overflow: hidden;
+}
+.verify .control-name {
+	float: left;
+}
+.verify .field-text {
+	float: right;
+	border: 0;
+}
+.verify input {
+	height: 30px;
+	width: 150px;
+	border: 0;
+}
+.verify .sendCode {
+	display: inline-block;
+	width: 90px;
+	text-align: center;
+}
+.verify .text, .verify .countdown {
+	font-size: 14px;
+  font-style: normal;
+}

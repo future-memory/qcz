@@ -1,0 +1,21 @@
+{
+  "css/common.css": "css/common-e59771e06c.css",
+  "css/shop/shop-index.css": "css/shop/shop-index-62d2fbbf64.css",
+  "css/shop/shop-order.css": "css/shop/shop-order-f6aa2e8b86.css",
+  "css/shop/shop-view.css": "css/shop/shop-view-9e613b92e9.css",
+  "js/lib/common.js": "js/lib/common-f8820b393c.js",
+  "js/lib/scale.js": "js/lib/scale-3093562af1.js",
+  "js/lib/swiper.min.js": "js/lib/swiper-b184484070.min.js",
+  "js/lib/underscore-min.js": "js/lib/underscore-min-543feb1eca.js",
+  "js/lib/vue-resource.min.js": "js/lib/vue-resource-e8fc46170a.min.js",
+  "js/lib/vue.js": "js/lib/vue-82d8c3b8e9.js",
+  "js/lib/vue2.js": "js/lib/vue2-91fc2bf50f.js",
+  "js/lib/vue2.min.js": "js/lib/vue2-278e59025c.min.js",
+  "js/lib/zepto.min.js": "js/lib/zepto-1abd55c514.min.js",
+  "js/shop/shop-index.js": "js/shop/shop-index-f60b9ee147.js",
+  "js/shop/shop-order.js": "js/shop/shop-order-ae08ca80ab.js",
+  "js/shop/shop-view.js": "js/shop/shop-view-8706da83cd.js",
+  "js/shop/show-view.js": "js/shop/show-view-8706da83cd.js",
+  "js/shop/vendor.js": "js/shop/vendor-fd0b83775a.js",
+  "js/vendor.js": "js/vendor-c2c0ff639e.js"
+}
