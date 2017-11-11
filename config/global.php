@@ -11,8 +11,8 @@ $_config['weibo'] = array(
 );
 
 $_config['weixin'] = array(
-	'appid'        => 'wx65a7fb2fec33bab0',
-	'secret'       => 'bd43281e515c2249e97610b52306cf74',
+	'appid'        => 'wx2029f58dd54307c8',
+	'secret'       => '13d94c3032fc571be998c5b756cf1c7b',
 	'callback_url' => DOMAIN.'index.php?mod=oauth&action=wxcallback',
 );
 

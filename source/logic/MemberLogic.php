@@ -102,6 +102,18 @@ class MemberLogic extends Logic
 		return $this->_dao->update($mid, $data);
 	}
 
+	//获取用户来源
+	public function get_member_source()
+	{
+		$user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+		$source = 1;
+		if(strpos($user_agent, 'micromessenger')){
+			$source = 2;
+		}else if(strpos($user_agent, 'weibo')){
+			$source = 3;
+		}
+		return $source;
+	}
 
 	//调整授权
 	public function gologin($referer = null)
@@ -113,7 +125,7 @@ class MemberLogic extends Logic
 		$referer = HelperUtils::check_url($referer) ? $referer : DOMAIN.ltrim($referer, '/');
 
 		if($source==2){
-			$callback = DOMAIN.'index.php?mod=story&action=wxcallback';
+			$callback = DOMAIN.'index.php?mod=oauth&action=wxcallback';
 			$url = ObjectCreater::create('OauthLogic')->get_weixin_auth_url($callback);
 			HelperCookie::set('oauth_referer', urlencode($referer));
 		}else if($source==3){
