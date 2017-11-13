@@ -17,6 +17,17 @@ class AdminLogic extends Logic
 		$this->_dao = ObjectCreater::create('AdminMemberDao');
 	}
 
+	//获取当前domain
+	public function get_current_domain()
+	{
+        $member = $this->get_current_member();
+        $domain = $member['domain'];
+        $cookie = HelperCookie::get('current_domain');
+        $domain = $domain=='www' && $cookie ? $cookie : $domain;
+
+        return $domain;
+	}
+
 	public function get_current_member()
 	{
 		if($this->cur_member===null){

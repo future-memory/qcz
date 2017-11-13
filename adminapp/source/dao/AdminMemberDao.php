@@ -10,12 +10,18 @@ class AdminMemberDao extends BaseDao
 		parent::__construct();
 	}
 
+	//
+	public function get_member_list($domain, $start, $limit)
+	{
+		return $this->_db->fetch_all('SELECT * FROM %t WHERE domain=%s ORDER BY uid DESC LIMIT %d,%d', array($this->_table, $domain, $start, $limit));
+	}
+
 	public function update_by_role($role_id, $data) 
 	{
 		if(!is_array($data)) {
 			return null;
 		}
-		return $this->_db->update('common_admin_member', $data, $this->_db->field('role_id', $role_id));
+		return $this->_db->update($this->_table, $data, $this->_db->field('role_id', $role_id));
 	}
 
 	//

@@ -10,11 +10,14 @@ class MasterController extends AdminController
 
     public function index() 
     {
+        $page     = (int)$this->get_param('page', 1);
+        $limit    = 10;
+        $start    = $page > 1 ? ($page-1)*$limit : 0;        
         $founders = HelperConfig::get_config('global::founders');
-        $founders = explode(',', $founders);
-
-        $roles   = ObjectCreater::create('AdminRoleLogic')->range();
-        $members = ObjectCreater::create('AdminMemberDao')->range();
+        $founders = explode(',', $founders);        
+        $roles    = ObjectCreater::create('AdminRoleLogic')->range();
+        $domain   = $this->logic->get_current_domain();
+        $members  = ObjectCreater::create('AdminMemberDao')->get_member_list($domain, $start, $limit);
 
     	include(APP_ROOT . '/template/master/index.php');
     }

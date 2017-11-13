@@ -98,7 +98,20 @@ class IndexController extends AdminController
         exit;
     }
 
+    //切换domain
+    public function switch_domain() 
+    {
+        $domain = $this->get_param('domain');
+        $this->throw_error(!$domain, array('code'=>400, 'message'=>'domain empty'));
 
+        $member  = $this->logic->get_current_member();
+        $founder = $this->logic->check_founder($member);
+        $this->throw_error(!$founder && $member['domain']!='www', array('code'=>400, 'message'=>'forbidden'));
+
+        HelperCookie::set('current_domain', $domain, 0, true);
+
+        $this->render_json(self::$WEB_SUCCESS_RT);
+    }
     
 }
 
