@@ -33,7 +33,7 @@
     <?php foreach ($members as $key => $member) { ?>
         <tr>
         <td><?php echo $member['username']; ?></td>
-        <td><?php echo in_array($member['username'], $founders) ? '超级管理员' : (isset($roles[$member['role_id']]) ? $roles[$member['role_id']]['name'] : '-'); ?></td>
+        <td><?php echo in_array($member['username'], $founders) ? 'Master' : (isset($roles[$member['role_id']]) ? $roles[$member['role_id']]['name'] : '-'); ?></td>
         <td>
           <?php if(in_array($member['username'], $founders)){ ?>
           -

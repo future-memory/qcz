@@ -48,7 +48,7 @@
         ?>
         <tr>
           <td><?php echo $value[2]; ?></td>
-          <td><?php echo in_array($value[2], $founders) ? '超级管理员' : (isset($roles[(int)$value[3]]) ? $roles[(int)$value[3]] : ''); ?></td>
+          <td><?php echo in_array($value[2], $founders) ? 'Master' : (isset($roles[(int)$value[3]]) ? $roles[(int)$value[3]] : ''); ?></td>
           <td><?php echo $value[4]; ?></td>
           <td><?php echo $value[1] ? date('Y-m-d H:i:s', (int)$value[1]) : '-'; ?></td>
           <td><?php echo $value[5]; ?></td>
