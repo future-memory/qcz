@@ -52,7 +52,7 @@ class AdminLogic extends Logic
 				$token_info = $this->_dao->get_admin_token($uid);
 				if(!empty($token_info) && $token_info['token']==rawurlencode($token)){
 					//没过期才初始化用户
-					$user = $this->_dao->fetch($uid);
+					$user = $this->_dao->fetch($uid, true);
 					if(!empty($user) && $user['password'] == $pwd) {
 						$this->cur_member = $user;
 					}

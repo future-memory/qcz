@@ -60,8 +60,51 @@ class SiteController extends AdminController
     public function delete() 
     {
         $domain = $this->get_param('domain');
-        ObjectCreater::create('SiteDao')->delete($domain);
+        //ObjectCreater::create('SiteDao')->delete($domain);
 
         $this->render_json(array('code' => 200, 'message' => '删除成功'));
     }
+
+    public function perm()
+    {
+        $domain = $this->get_param('domain');
+        $site   = ObjectCreater::create('SiteDao')->fetch($domain);
+        $perms  = ObjectCreater::create('SitePermDao')->fetch_all_by_domain($domain);
+
+        $permed = array();
+        foreach($perms as $key => $value) {
+            $permed[] = $value['perm'];
+        }
+
+        $menu_list  = ObjectCreater::create('MenuLogic')->get_all_menu();
+
+        include(APP_ROOT . '/template/site/perm.php');
+    }
+
+    public function perm_update()
+    {
+        $domain = $this->get_param('domain');
+        $mods   = $this->get_param('mods');
+        $mods   = is_array($mods) ? $mods : explode(',', $mods);
+
+        $this->throw_error(!$domain, array('code'=>400, 'message'=>'参数错误'));
+
+        $mod_list = ObjectCreater::create('MenuLogic')->get_mod_list();
+
+        //把原有的权限清除
+        ObjectCreater::create('SitePermDao')->delete_perms_by_domain($domain);
+
+        //保存选择的权限
+        $data = array();
+        foreach ($mods as $mod) {
+            if(in_array($mod, $mod_list)){
+                $data[] = array('domain'=>$domain, 'perm'=>$mod);
+            }
+        }
+
+        ObjectCreater::create('SitePermDao')->batch_insert($data);
+
+        $this->render_json(array('code'=>200, 'message'=>'编辑成功'));
+    }
+
 }

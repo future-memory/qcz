@@ -129,6 +129,12 @@ class MasterController extends AdminController
             'username' => $username,
         );
 
+        $domain = $this->logic->get_current_domain();
+        //站点管理员添加的用户
+        if(!$uid && $domain && $domain!='www'){
+            $data['domain'] = $domain;
+        }
+
         $uid && $data['uid'] = $uid;
         $password && $data['password'] = $password;
         

@@ -37,7 +37,8 @@
         <td><?php echo $site['appkey']; ?></td>
         <td> 
           <a href="index.php?mod=site&action=edit&domain=<?php echo $site['domain']; ?>">编辑</a>
-          <a href="#" data-domain="<?php echo $site['domain']; ?>">删除</a>
+          <a href="index.php?mod=site&action=perm&domain=<?php echo $site['domain']; ?>">权限管理</a>
+          <!--<a href="#" data-domain="<?php echo $site['domain']; ?>">删除</a>-->
         </td>
         </tr>
     <?php } ?>                     
