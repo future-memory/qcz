@@ -10,7 +10,6 @@ class ShopController extends AdminController
 		5 => '已完成',
 		8 => '已取消', 
 	);
-	private $_logic;
 	private $_base_url = 'index.php?mod=shop';
 
 	public $tabs = array(
@@ -28,7 +27,7 @@ class ShopController extends AdminController
 		parent::__construct();
 
 		$this->current_action = Nice::app()->getAction();
-		$this->_logic = ObjectCreater::create('ShopLogic');
+		$this->logic = ObjectCreater::create('ShopLogic');
 	}
 
 	public function index() 
@@ -43,15 +42,16 @@ class ShopController extends AdminController
 		$start_time = is_numeric($start_time) ? intval($start_time) : strtotime($start_time);
 		$end_time   = is_numeric($end_time) ? intval($end_time) : strtotime($end_time);
 		
-		$count      = $this->_logic->get_count($status, $goods_id, $start_time, $end_time);
-		$list       = $this->_logic->get_list($status, $goods_id, $start_time, $end_time, $start, $limit);
+		$count      = $this->logic->get_count($status, $goods_id, $start_time, $end_time);
+		$list       = $this->logic->get_list($status, $goods_id, $start_time, $end_time, $start, $limit);
 
 		$orderids = array();
 		foreach($list as $key=>$item){
 			$orderids[]    = $item['id'];
 		}
 
-		$order_goods = $this->_logic->get_order_goods_list_by_orderids($orderids);
+		$order_goods = $this->logic->get_order_goods_list_by_orderids($orderids);
+		$order_goods = $order_goods ? $order_goods : array();
 		$goods_list  = array();
 		foreach($order_goods as $goods){
 			$goods_list[$goods['order_id']]   = isset($goods_list[$goods['order_id']]) ? $goods_list[$goods['order_id']] : array();
@@ -59,7 +59,7 @@ class ShopController extends AdminController
 		}
 
 		$order_status_array = $this->order_status_array;
-		$goods_list_all = $this->_logic->get_goods_range();
+		$goods_list_all = $this->logic->get_goods_range();
 		
 		$url = 'index.php?' . urlencode($_SERVER['QUERY_STRING']);
 		$pager = HelperPager::paging($count, $limit, $page, 'index.php?mod=shop&status='.$status.'&start_time='.$start_time.'&end_time='.$end_time.'&goods_id='.$goods_id);
@@ -111,9 +111,9 @@ class ShopController extends AdminController
 		HelperUtils::export_csv_start(iconv('utf-8', 'gbk//ignore', '兑换订单'.$name_plus.'.csv'), $title_arr);
 
 		$loop_index = $index = 1 ;
-		$total      = $this->_logic->get_count($status, $goods_id, $start_time, $end_time);
+		$total      = $this->logic->get_count($status, $goods_id, $start_time, $end_time);
         do{
-			$list    = $this->_logic->get_list($status, $goods_id, $start_time, $end_time, $loop_index, $limit);
+			$list    = $this->logic->get_list($status, $goods_id, $start_time, $end_time, $loop_index, $limit);
 			$csv_row = '';
 			// $index   = $index===1 ? 2 : $index;
 
@@ -122,7 +122,7 @@ class ShopController extends AdminController
 				$orderids[]    = $val['id'];
 			}
 
-			$order_goods = $this->_logic->get_order_goods_list_by_orderids($orderids);
+			$order_goods = $this->logic->get_order_goods_list_by_orderids($orderids);
 			$goods_list  = array();
 			foreach($order_goods as $goods){
 				$goods_list[$goods['order_id']]   = isset($goods_list[$goods['order_id']]) ? $goods_list[$goods['order_id']] : array();
@@ -172,9 +172,9 @@ class ShopController extends AdminController
 		$price_end   = isset($price_array[1]) ? intval($price_array[1]) : 0;
 		
 		$domain = ObjectCreater::create('AdminLogic')->get_current_domain();
-		$count  = $this->_logic->get_goods_count($domain);
-		$list   = $this->_logic->get_goods_list($domain, $start, $limit);
-		$types  = $this->_logic->get_goods_types($domain);		
+		$count  = $this->logic->get_goods_count($domain);
+		$list   = $this->logic->get_goods_list($domain, $start, $limit);
+		$types  = $this->logic->get_goods_types($domain);		
 		$pager  = HelperPager::paging($count, $limit, $page, $this->_base_url . '&action=goods');
 		
 		include(APP_ROOT . '/template/shop/goods.php');
@@ -183,7 +183,7 @@ class ShopController extends AdminController
 	public function edit_goods() 
 	{
 		$id   = (int)$this->get_param('id', 0);
-		$info = $id ? $this->_logic->get_goods_by_id($id) : array();
+		$info = $id ? $this->logic->get_goods_by_id($id) : array();
 		if(!empty($info)){
 			$info['goods_pic'] = isset($info['goods_pic']) && $info['goods_pic'] ? HelperUtils::get_pic_url($info['goods_pic'], 'shop') : null;
 
@@ -191,7 +191,7 @@ class ShopController extends AdminController
 		}
 
 		$domain = ObjectCreater::create('AdminLogic')->get_current_domain();
-		$types  = $this->_logic->get_goods_types($domain);	
+		$types  = $this->logic->get_goods_types($domain);	
 		
 		include(APP_ROOT . '/template/shop/edit_goods.php');	
 	}
@@ -199,7 +199,7 @@ class ShopController extends AdminController
 	public function edit_goods_count() 
 	{
 		$id   = (int)$this->get_param('id', 0);
-		$info = $id ? $this->_logic->get_goods_by_id($id) : array();
+		$info = $id ? $this->logic->get_goods_by_id($id) : array();
 
 		include(APP_ROOT . '/template/shop/edit_goods_count.php');	
 	}
@@ -248,10 +248,10 @@ class ShopController extends AdminController
         }
 
 		if($id){
-			$this->_logic->update_goods($id, $data);
+			$this->logic->update_goods($id, $data);
 		}else{
 			$data['count'] = $count;
-			$this->_logic->save_goods($data);
+			$this->logic->save_goods($data);
 		}
 
 		$this->render_json(array(
@@ -275,7 +275,7 @@ class ShopController extends AdminController
 			'count' => $count,           
 		);
 
-		$this->_logic->update_goods($id, $data);
+		$this->logic->update_goods($id, $data);
 
 		$this->render_json(array(
 			'code' => 200,
@@ -289,8 +289,8 @@ class ShopController extends AdminController
 		$limit   = (int)$this->get_param('limit', 15);
 		$start   = $page > 1 ? ($page-1) * $limit : 0;
 		
-		$count   = $this->_logic->get_goods_type_count();
-		$list    = $this->_logic->get_goods_type_list($start, $limit);
+		$count   = $this->logic->get_goods_type_count();
+		$list    = $this->logic->get_goods_type_list($start, $limit);
 		
 		$pager   = HelperPager::paging($count, $limit, $page, $this->_base_url . "&action=goods_type");
 
@@ -299,7 +299,7 @@ class ShopController extends AdminController
 
 	public function edit_goods_type() {
 		$id   = (int)$this->get_param('id', 0);
-		$info = $id ? $this->_logic->get_goods_type($id) : array();
+		$info = $id ? $this->logic->get_goods_type($id) : array();
 		if (!empty($info)) {
 			$this->tabs[$this->current_action] = '编辑商品类型';
 		}
@@ -323,7 +323,7 @@ class ShopController extends AdminController
             $data['domain'] = $domain;
         }
 
-		$id ? $this->_logic->update_goods_type($id, $data) : $this->_logic->save_goods_type($data);
+		$id ? $this->logic->update_goods_type($id, $data) : $this->logic->save_goods_type($data);
 
 		$this->render_json(array(
 			'code'    => 200,
@@ -340,13 +340,13 @@ class ShopController extends AdminController
 			'message' => '参数错误',
 			));
 
-		$count = $this->_logic->get_goods_count($id);
+		$count = $this->logic->get_goods_count($id);
 		parent::throw_error($count>0, array(
 			'code' => 403,
 			'message' => '该分类下还有商品，请移走或删除后再试！',
 			));		
 
-		$this->_logic->delete_goods_type($id);
+		$this->logic->delete_goods_type($id);
 		$this->render_json(array(
 			'code' => 200,
 			'message' => '操作成功',
@@ -366,7 +366,7 @@ class ShopController extends AdminController
 
 		$data = array('is_online'=>$val);
 
-		$this->_logic->update_goods($id, $data);
+		$this->logic->update_goods($id, $data);
 		$this->render_json(array(
 			'code' => 200,
 			'message' => '操作成功',
@@ -399,24 +399,24 @@ class ShopController extends AdminController
 			'message' => '消息不能为空',
 			));
 
-		$info = $this->_logic->get_order($id);
+		$info = $this->logic->get_order($id);
 		parent::throw_error(!$info, array(
 			'code' => 403,
 			'message' => '参数错误',
 			));
 
 		$data = array('status'=>3, 'delivery_time'=>TIMESTAMP, 'delivery_sn'=>$delivery_sn, 'deliver'=>$deliver);
-		$this->_logic->update_order($id, $data);
+		$this->logic->update_order($id, $data);
 
 		//发送系统消息
 		if($send){
 			$member = ObjectCreater::create('AdminLogic')->get_member_by_uid($info['uid']);
 			$message = str_replace('{deliver}', $deliver, $message);
 			$message = str_replace('{sn}', $delivery_sn, $message);
-			$this->_logic->send_message($member, $message);
+			$this->logic->send_message($member, $message);
 		}
 
-		$this->_logic->del_user_order_cache($info['uid']);
+		$this->logic->del_user_order_cache($info['uid']);
 
 		$this->render_json(array(
 			'code' => 200,
@@ -456,7 +456,7 @@ class ShopController extends AdminController
 			'message' => '消息不能为空',
 			));
 
-		$info = $this->_logic->get_order($id);
+		$info = $this->logic->get_order($id);
 		parent::throw_error(!$info, array(
 			'code' => 403,
 			'message' => '参数错误',
@@ -473,16 +473,16 @@ class ShopController extends AdminController
 
 		//未进行退煤球和恢复库存的
 		if($status===2 && $info['status']===9){
-			$this->_logic->restore_goods_count($id, $data, $info);
+			$this->logic->restore_goods_count($id, $data, $info);
 		}else{
-			$this->_logic->update_order($id, $data);			
+			$this->logic->update_order($id, $data);			
 		}
 		
 		//发送系统消息
 		if($send){
 			$member  = ObjectCreater::create('AdminLogic')->get_member_by_uid($info['uid']);
 			$message = str_replace('{audit_result}', $status==2 ? '未通过' : '已通过', $message);
-			$this->_logic->send_message($member, $message);
+			$this->logic->send_message($member, $message);
 		}
 
 		$this->render_json(array(
@@ -514,7 +514,7 @@ class ShopController extends AdminController
 			'message' => '消息不能为空',
 			));
 
-		$orders = $this->_logic->get_orders($ids);
+		$orders = $this->logic->get_orders($ids);
 		parent::throw_error(!$orders, array(
 			'code' => 403,
 			'message' => '消息不能为空',
@@ -531,16 +531,16 @@ class ShopController extends AdminController
 			}
 			//未进行退煤球和恢复库存的
 			if($status===2 && $info['status']===9){
-				$this->_logic->restore_goods_count($info['id'], $data, $info);
+				$this->logic->restore_goods_count($info['id'], $data, $info);
 			}else{
-				$this->_logic->update_order($info['id'], $data);		
+				$this->logic->update_order($info['id'], $data);		
 			}
 			
 			//发送系统消息
 			if($send){
 				$member = ObjectCreater::create('AdminLogic')->get_member_by_uid($info['uid']);
 				$message = str_replace('{audit_result}', $status==2 ? '未通过' : '已通过', $message);
-				$this->_logic->send_message($member, $message);
+				$this->logic->send_message($member, $message);
 			}
 		}
 
@@ -560,7 +560,7 @@ class ShopController extends AdminController
 			));
 
 		$data = array('status'=>5);
-		$ret  = $this->_logic->update_order($id, $data);
+		$ret  = $this->logic->update_order($id, $data);
 		parent::throw_error(!$ret, array(
 			'code' => 403,
 			'message' => '参数错误',

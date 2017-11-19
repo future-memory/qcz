@@ -263,15 +263,18 @@ class AdminLogic extends Logic
 	//保存操作日志
 	public function writelog() 
 	{
-		$member   = $this->get_current_member();
+		$member = $this->get_current_member();
+		$domain = $this->get_current_domain();
+		$domain = $domain ? $domain : 'www';
 		if (!$member['uid'] || empty($member['username'])) {
 			return;
 		}
-		$mod      = Nice::app()->getController();
-		$action   = Nice::app()->getAction();
-		$extralog = $this->implodearray(array('GET' => $_GET, 'POST' => $_POST), array('formhash', 'submit', 'addsubmit', 'admin_password', 'sid', 'action'));
 
-		HelperLog::writelog('cplog', implode("\t", $this->clearlogstring(array(TIMESTAMP, $member['username'], $member['role_id'], $member['clientip'], 'mod=' . $mod . '&action=' . $action, $extralog))));
+		$mod    = Nice::app()->getController();
+		$action = Nice::app()->getAction();
+		$extlog = $this->implodearray(array('GET' => $_GET, 'POST' => $_POST), array('formhash', 'submit', 'addsubmit', 'admin_password', 'sid', 'action'));
+
+		HelperLog::writelog('cplog_'.$domain, implode("\t", $this->clearlogstring(array(TIMESTAMP, $member['username'], $member['role_id'], $member['clientip'], 'mod=' . $mod . '&action=' . $action, $extlog))));
 	}
 
 	//格式化日志内容

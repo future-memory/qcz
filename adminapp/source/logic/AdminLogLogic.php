@@ -45,15 +45,20 @@ class AdminLogLogic extends Logic
 
 		if($files) {
 			sort($files);
-			$logfile = $action;
+			$logfile  = $action;
 			$logfiles = array();
-			$ym = '';
+			$ym       = '';
+			$domain   = ObjectCreater::create('AdminLogic')->get_current_domain();
+			$domain   = $domain ? $domain : 'www';
+
 			foreach($files as $file) {
 				if(strpos($file, $logfile) !== FALSE) {
 					if(substr($file, 0, 6) != $ym) {
 						$ym = substr($file, 0, 6);
 					}
-					$logfiles[$ym][] = $file;
+					if($file==$ym.'_cplog_'.$domain.'.php'){
+						$logfiles[$ym][] = $file;
+					}
 				}
 			}
 			if($logfiles) {
@@ -64,6 +69,7 @@ class AdminLogLogic extends Logic
 					$lf[] = $lastlogfile;
 					$lfs = array_merge($lfs, $lf);
 				}
+
 				return $lfs;
 			}
 			return array();
