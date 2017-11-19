@@ -24,9 +24,12 @@ class MasterController extends AdminController
 
     public function role_list() 
     {
+        $member     = $this->logic->get_current_member();
+        $is_founder = $this->logic->check_founder($member);
+
         $domain = $this->logic->get_current_domain();
         $roles  = ObjectCreater::create('AdminRoleDao')->get_role_list($domain);
-        
+
         include(APP_ROOT . '/template/master/role_list.php');
     }
 

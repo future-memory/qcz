@@ -33,8 +33,15 @@
           <tr>
             <td><?php echo $role['name']; ?></td>
             <td>
+              <?php if(!$is_founder && $role['name']=='超级管理员'){ ?>
+              <?php }else{?>
               <a href="index.php?mod=master&action=role_edit&id=<?php echo $role['id']; ?>">权限管理</a>
+              <?php } ?>
+
+              <?php if(!$is_founder && (!$role['domain'] || $role['domain']=='www')){ ?>
+              <?php }else{?>
               <a href="#" data-id="<?php echo $role['id']; ?>" class="del">删除</a>
+              <?php } ?>
             </td>
           </tr>    
        <?php }?>                              
@@ -44,7 +51,7 @@
   <div class="row" style="margin-bottom: 100px">
     <form action="index.php?mod=master&action=role_add" method="post" name="form" enctype="multipart/form-data" id="form1" data-return-url="index.php?mod=master&action=role_list">
       <div>
-        <input type="text" name="name" id="" required placeholder="新增分组" value="">        
+        <input type="text" name="name" id="" required placeholder="新增角色" value="">        
         <button type="button" class="btn btn-primary" name="editsubmit" id="submit-btn">提交</button>
       </div>
     </form>
