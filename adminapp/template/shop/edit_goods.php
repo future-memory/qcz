@@ -21,25 +21,27 @@
   <p></p>
   <div>
     <ul class="nav nav-tabs">
-      <?php foreach ($this->tabs as $action => $action_name): ?>
-        <?php if ($this->current_action == $action): ?>
-      <li role="presentation" class="active"><a href="#"><?=$action_name?></a></li>
-        <?php else: ?>
-      <li role="presentation"><a href="index.php?mod=shop&action=<?=$action?>"><?=$action_name?></a></li>
-        <?php endif ?>
-      <?php endforeach ?>
+      <?php foreach ($this->tabs as $action => $action_name){ ?>
+        <?php if ($this->current_action == $action){ ?>
+      <li role="presentation" class="active"><a href="#"><?php echo $action_name; ?></a></li>
+        <?php }else{ ?>
+      <li role="presentation">
+        <a href="index.php?mod=shop&action=<?php echo $action; ?>"><?php echo $action_name; ?></a>
+      </li>
+        <?php } ?>
+      <?php } ?>
     </ul>
   </div>
   <p></p>
   <div>
     <form id="form1"  class="form-horizontal" action="" name="form" enctype="multipart/form-data">
 
-      <input type="hidden" name="id" value="<?=isset($info['id']) ? $info['id'] : ''; ?>">
+      <input type="hidden" name="id" value="<?php echo isset($info['id']) ? $info['id'] : ''; ?>">
 
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">商品名称</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="name"  value="<?=isset($info['name']) ? $info['name'] : ''?>">
+          <input class="form-control" type="text" name="name"  value="<?php echo isset($info['name']) ? $info['name'] : ''; ?>">
         </div>
       </div>
       
@@ -48,8 +50,8 @@
         <div class="col-sm-7">
           <select class="form-control" name="type" id="type">
             <option value="">请选择</option>
-            <?php foreach ($type_list as $type) { ?>
-            <option value="<?=$type['id']; ?>" <?=!empty($info) && $info['type']==$type['id']  ? 'selected' : ''; ?>><?=$type['name']; ?></option>
+            <?php foreach ($types as $type) { ?>
+            <option value="<?php echo $type['id']; ?>" <?php echo !empty($info) && $info['type']==$type['id']  ? 'selected' : ''; ?>><?php echo $type['name']; ?></option>
             <?php } ?>
           </select>
         </div>
@@ -59,10 +61,10 @@
         <label for="" class="col-sm-1 control-label">是否上架</label>
         <div class="col-sm-7">
           <label class="radio-inline">
-            <input type="radio" name="is_online" value="1" <?=!empty($info) && $info['is_online'] ? 'checked' : ''; ?>> 是
+            <input type="radio" name="is_online" value="1" <?php echo !empty($info) && $info['is_online'] ? 'checked' : ''; ?>> 是
           </label>
           <label class="radio-inline">
-            <input type="radio" name="is_online" value="0" <?=!empty($info) && !$info['is_online'] ? 'checked' : ''; ?>> 否
+            <input type="radio" name="is_online" value="0" <?php echo !empty($info) && !$info['is_online'] ? 'checked' : ''; ?>> 否
           </label>      
         </div>
       </div>
@@ -70,7 +72,7 @@
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">排序</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="sort_order"  value="<?=isset($info['sort_order']) ? $info['sort_order'] : ''?>">
+          <input class="form-control" type="text" name="sort_order"  value="<?php echo isset($info['sort_order']) ? $info['sort_order'] : ''; ?>">
           <p class="bg-success">
             <span class="help-block">填写数值越大越排前，取值范围为0到255</span>
           </p>
@@ -80,7 +82,7 @@
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">限购</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="limit"  value="<?=isset($info['limit']) ? $info['limit'] : ''?>">
+          <input class="form-control" type="text" name="limit"  value="<?php echo isset($info['limit']) ? $info['limit'] : ''; ?>">
           <p class="bg-success">
             <span class="help-block">限制每单购买个数，0为不限制</span>
           </p>
@@ -90,7 +92,7 @@
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">商品价格</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="price"  value="<?=isset($info['price']) ? $info['price'] : ''?>">
+          <input class="form-control" type="text" name="price"  value="<?php echo isset($info['price']) ? $info['price'] : ''; ?>">
           <p class="bg-success">
             <span class="help-block">单位 元，支持两位小数</span>
           </p>
@@ -100,39 +102,35 @@
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">商品原价</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="orig_price"  value="<?=isset($info['orig_price']) ? $info['orig_price'] : ''?>">
+          <input class="form-control" type="text" name="orig_price"  value="<?php echo isset($info['orig_price']) ? $info['orig_price'] : ''; ?>">
           <p class="bg-success">
             <span class="help-block">不填写时前台不显示</span>
           </p>
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="" class="col-sm-1 control-label">可用积分</label>
+        <div class="col-sm-7">
+          <input class="form-control" type="text" name="credit"  value="<?php echo isset($info['credit']) ? $info['credit'] : ''; ?>">
+          <p class="bg-success">
+            <span class="help-block">不填写时前台不显示</span>
+          </p>
+        </div>
+      </div>
+
+
 <?php if (empty($info)): ?>
       <div class="form-group">
         <label for="" class="col-sm-1 control-label">商品数量</label>
         <div class="col-sm-7">
-          <input class="form-control" type="text" name="count"  value="<?=isset($info['count']) ? $info['count'] : ''?>">
+          <input class="form-control" type="text" name="count"  value="<?php echo isset($info['count']) ? $info['count'] : ''; ?>">
           <p class="bg-success">
             <span class="help-block">填写库存量</span>
           </p>
         </div>
       </div> 
 <?php endif ?>
-
-      <div class="form-group">
-        <label class="col-sm-1 control-label">缩略图上传</label>
-        <div class="col-sm-7">
-          <input type="file" class="form-control fileupload" name="cover_pic" value="" data-uped="<?php echo isset($info['cover_pic']) && $info['cover_pic'] ? 1 : 0; ?>">
-          <p class="bg-success">
-            <span class="help-block">图片尺寸：190×190，图片大小：100k</span>
-            <?php if (isset($info['cover_pic']) && $info['cover_pic']): ?>
-            <span>
-              <a href="<?php echo $info['cover_pic']; ?>" target="_blank">查看已上传图片</a>
-            </span>
-            <?php endif ?>
-          </p>
-        </div>      
-      </div>
 
       <div class="form-group">
         <label class="col-sm-1 control-label">商品图上传</label>
@@ -150,29 +148,9 @@
       </div>
 
       <div class="form-group">
-        <label class="col-sm-1 control-label">购买须知</label>
-        <div class="col-sm-7">
-          <textarea class="form-control" cols="50" rows="6" name="notice" id="notice"><?php echo !empty($info) ? $info['notice'] : ''; ?></textarea>
-          <p class="bg-success">
-            <span class="help-block">显示于详情页，商品名下方</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="col-sm-1 control-label">商品简述</label>
-        <div class="col-sm-7">
-          <textarea class="form-control" cols="50" rows="6" name="summary" id="summary"><?php echo !empty($info) ? $info['summary'] : ''; ?></textarea>
-          <p class="bg-success">
-            <span class="help-block">在首页页商品列表，鼠标移至商品时显示</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="form-group">
         <label class="col-sm-1 control-label">商品描述</label>
         <div class="col-sm-7">
-          <textarea class="form-control" cols="50" rows="6" name="remark" id="remark"><?php echo !empty($info) ? $info['remark'] : ''; ?></textarea>
+          <textarea class="form-control" cols="50" rows="6" name="intro" id="intro"><?php echo !empty($info) ? $info['intro'] : ''; ?></textarea>
           <p class="bg-success">
             <span class="help-block">详情页下半部分，<span style="color:red;">图片宽度不能大于900！ </span></span>
           </p>
@@ -193,7 +171,7 @@
 <script type="text/javascript">
   var editor;
   KindEditor.ready(function(K) {
-    editor = K.create('textarea[name="remark"]', {
+    editor = K.create('textarea[name="intro"]', {
       resizeType : 1,
       allowPreviewEmoticons : false,
       allowImageUpload : true,
@@ -274,13 +252,6 @@ $("#_submit-btn").click(function() {
     }
   }
 
-  var cover_pic  = $("input[name='cover_pic']").val();
-  var cover_uped = parseInt($("input[name='cover_pic']").attr('data-uped'));
-  if(!cover_pic && !cover_uped){
-    alert('请上传缩略图！');
-    $("input[name='cover_pic']").focus();
-    return false;
-  }
   var goods_pic  = $("input[name='goods_pic']").val();
   var goods_uped = parseInt($("input[name='goods_pic']").attr('data-uped'));
   if(!goods_pic && !goods_uped){

@@ -1,14 +1,16 @@
 <?php
-class ShopLogic extends Logic {
-
-	public function __construct() {
+class ShopLogic extends Logic 
+{
+	public function __construct() 
+	{
 		$this->_dao = ObjectCreater::create('ShopOrderDao');
 		$this->_goods_dao = ObjectCreater::create('ShopGoodsDao');
 		$this->_order_goods_dao = ObjectCreater::create('ShopOrderGoodsDao');
 		$this->_goods_type_dao = ObjectCreater::create('ShopGoodsTypeDao');
 	}
 
-	public function restore_goods_count($id, $data, $info) {
+	public function restore_goods_count($id, $data, $info)
+	{
 		$this->_dao->begin();
 		//退煤球 --为什么用if：有可能0煤球
 		$res = true;
@@ -34,40 +36,6 @@ class ShopLogic extends Logic {
 		}		
 	}
 
-	private function send_mb($uid, $mb, $op, $id=0) 
-	{
-		$res = ObjectCreater::create('AfterMemberDao')->add_extcredits_3($uid, $mb);
-		if($res){
-			$credit_log = array(
-				'uid'         => $uid,
-				'operation'   => $op,
-				'relatedid'   => $id,
-				'extcredits3' => $mb,
-				'dateline'    => TIMESTAMP,
-			);
-			return ObjectCreater::create('CreditLogDao')->insert_log($credit_log);
-		}
-		return false;
-	}
-
-	public function send_message($member, $message) {
-		$pmdata  = array(
-            'authorid' => '',
-            'author' => '',
-            'dateline' => TIMESTAMP,
-            'message' => $message,
-            'numbers' => 1
-        );
-        $gpmid = ObjectCreater::create('CommonGrouppmDao')->insert($pmdata, true);
-
-        if($gpmid > 0){
-            ObjectCreater::create('CommonMemberGrouppmDao')->insert(array('uid'=>$member['uid'], 'gpmid'=>$gpmid,'status' => 0), false, true);
-            $newpm = HelperUtils::setstatus(2, 1, $member['newpm']);
-            ObjectCreater::create('MemberDao')->update($member['uid'], array('newpm'=>$newpm));
-            return true;
-        }
-        return false;
-	}
 
 	public function get_order($id) {
 		return $this->_dao->fetch($id);
@@ -109,16 +77,16 @@ class ShopLogic extends Logic {
 		return $this->_goods_dao->range();
 	}
 
-	public function get_goods_count($type=0, $price_start=0, $price_end=0, $belong=null) {
-		return $this->_goods_dao->get_count($type, $price_start, $price_end, $belong);
+	//商品个数
+	public function get_goods_count($domain) 
+	{
+		return $this->_goods_dao->get_goods_count($domain);
 	}
 
-	public function get_goods_admin_count() {
-		return $this->_goods_dao->admin_get_count();
-	}
-
-	public function get_goods_admin_list($start=0, $limit=15) {
-		return $this->_goods_dao->admin_get_list($start, $limit);
+	//商品列表
+	public function get_goods_list($domain, $start=0, $limit=15) 
+	{
+		return $this->_goods_dao->get_goods_list($domain, $start, $limit);
 	}
 
 	public function get_order_goods_list_by_orderids($orderids) {
@@ -141,8 +109,8 @@ class ShopLogic extends Logic {
 		return $this->_goods_type_dao->delete($id);
 	}
 
-	public function get_goods_type_range() {
-		return $this->_goods_type_dao->range();
+	public function get_goods_types($domain) {
+		return $this->_goods_type_dao->get_goods_types($domain);
 	}
 
 	public function get_goods_type_count() {

@@ -36,19 +36,15 @@ class ShopController extends AdminController
 		$page       = (int)$this->get_param('page', 1);
 		$limit      = (int)$this->get_param('limit', 15);
 		$start      = $page > 1 ? ($page-1) * $limit : 0;
-		
 		$status     = (int)$this->get_param('status', 0);
-		$belong     = $this->get_param('belong', null);
-		$belong     = $belong===null || $belong==='' ? null : $belong;
-		
 		$goods_id   = (int)$this->get_param('goods_id', 0);
 		$start_time = $this->get_param('start_time');
 		$end_time   = $this->get_param('end_time');
 		$start_time = is_numeric($start_time) ? intval($start_time) : strtotime($start_time);
 		$end_time   = is_numeric($end_time) ? intval($end_time) : strtotime($end_time);
 		
-		$count      = $this->_logic->get_count($status, $goods_id, $start_time, $end_time, $belong);
-		$list       = $this->_logic->get_list($status, $goods_id, $start_time, $end_time, $start, $limit, $belong);
+		$count      = $this->_logic->get_count($status, $goods_id, $start_time, $end_time);
+		$list       = $this->_logic->get_list($status, $goods_id, $start_time, $end_time, $start, $limit);
 
 		$orderids = array();
 		foreach($list as $key=>$item){
@@ -175,12 +171,11 @@ class ShopController extends AdminController
 		$price_start = isset($price_array[0]) ? intval($price_array[0]) : 0;
 		$price_end   = isset($price_array[1]) ? intval($price_array[1]) : 0;
 		
-		$count   = $this->_logic->get_goods_admin_count();
-		$list    = $this->_logic->get_goods_admin_list($start, $limit);
-		
-		$types   = $this->_logic->get_goods_typerange(0, 1000);
-		
-		$pager   = HelperPager::paging($count, $limit, $page, $this->_base_url . '&action=goods');
+		$domain = ObjectCreater::create('AdminLogic')->get_current_domain();
+		$count  = $this->_logic->get_goods_count($domain);
+		$list   = $this->_logic->get_goods_list($domain, $start, $limit);
+		$types  = $this->_logic->get_goods_types($domain);		
+		$pager  = HelperPager::paging($count, $limit, $page, $this->_base_url . '&action=goods');
 		
 		include(APP_ROOT . '/template/shop/goods.php');
 	}
@@ -190,13 +185,13 @@ class ShopController extends AdminController
 		$id   = (int)$this->get_param('id', 0);
 		$info = $id ? $this->_logic->get_goods_by_id($id) : array();
 		if(!empty($info)){
-			$info['cover_pic'] = isset($info['cover_pic']) && $info['cover_pic'] ? HelperUtils::get_pic_url($info['cover_pic'], 'shop') : null;
 			$info['goods_pic'] = isset($info['goods_pic']) && $info['goods_pic'] ? HelperUtils::get_pic_url($info['goods_pic'], 'shop') : null;
 
 			$this->tabs[$this->current_action] = '编辑商品';
 		}
 
-		$type_list =$this->_logic->get_goods_type_list(0, 1000);
+		$domain = ObjectCreater::create('AdminLogic')->get_current_domain();
+		$types  = $this->_logic->get_goods_types($domain);	
 		
 		include(APP_ROOT . '/template/shop/edit_goods.php');	
 	}
@@ -215,48 +210,42 @@ class ShopController extends AdminController
 		$name       = $this->get_param('name');
 		$type       = (int)$this->get_param('type');
 		$is_online  = (int)$this->get_param('is_online');
-		$price      = (int)$this->get_param('price');
-		$orig_price = (int)$this->get_param('orig_price', 0);
+		$price      = (float)$this->get_param('price');
+		$orig_price = (float)$this->get_param('orig_price', 0);
+		$credit     = (int)$this->get_param('credit');
 		$limit      = (int)$this->get_param('limit');
 		$sort_order = (int)$this->get_param('sort_order', 0);
 		$count      = (int)$this->get_param('count');
-		$summary    = $this->get_param('summary');
-		$remark     = $this->get_param('remark');
-		$notice     = $this->get_param('notice');
+		$intro      = $this->get_param('intro');
 
 		parent::throw_error(!$name || !$type, array('code'=>400, 'message'=>'参数错误'));
 		parent::throw_error(!$price, array('code'=>400,'message' => '价格不能为空'));
 
 		$data = array(
-			'name'        => $name,
-			'type'        => $type,
-			'is_online'   => $is_online,
-			'price'       => $price, 
-			'orig_price'  => $orig_price, 
-			'limit'       => $limit,
-			'sort_order'  => $sort_order,
-			'remark'      => $remark,
-			'summary'     => $summary, 
-			'notice'      => $notice
+			'name'       => $name,
+			'type'       => $type,
+			'is_online'  => $is_online,
+			'price'      => $price, 
+			'orig_price' => $orig_price, 
+			'limit'      => $limit,
+			'sort_order' => $sort_order,
+			'credit'     => $credit, 
+			'intro'      => $intro
 		);
 
-		if($_FILES['cover_pic']['name']){
-			//缩略图
-			$path = ObjectCreater::create('AttachmentLogic')->get_filepath('shop', $_FILES['cover_pic']['name']);
-			$res  = ObjectCreater::create('AttachmentLogic')->upload($path, $_FILES['cover_pic']);
-			parent::throw_error(!$res, array('code'=>501, 'message'=>'上传图片失败'));
-
-			$data['cover_pic'] = $path;
-		}
-
 		if($_FILES['goods_pic']['name']){
-			//大图
 			$path = ObjectCreater::create('AttachmentLogic')->get_filepath('shop', $_FILES['goods_pic']['name']);
 			$res  = ObjectCreater::create('AttachmentLogic')->upload($path, $_FILES['goods_pic']);
 			parent::throw_error(!$res, array('code'=>502, 'message'=>'上传图片失败'));
 			
 			$data['goods_pic'] = $path;	
 		}
+
+        $domain = ObjectCreater::create('AdminLogic')->get_current_domain();
+        //站点管理员添加的用户
+        if($domain && $domain!='www'){
+            $data['domain'] = $domain;
+        }
 
 		if($id){
 			$this->_logic->update_goods($id, $data);
@@ -328,13 +317,19 @@ class ShopController extends AdminController
 
 		$data = array('name' => $name);
 
+        $domain = ObjectCreater::create('AdminLogic')->get_current_domain();
+        //站点管理员添加的用户
+        if($domain && $domain!='www'){
+            $data['domain'] = $domain;
+        }
+
 		$id ? $this->_logic->update_goods_type($id, $data) : $this->_logic->save_goods_type($data);
 
 		$this->render_json(array(
-			'code' => 200,
+			'code'    => 200,
 			'message' => '操作成功',
-			'returl' => $this->_base_url . '&action=goods_type',
-			));
+			'returl'  => $this->_base_url . '&action=goods_type',
+		));
 	}
 
 	public function del_goods_type() {
