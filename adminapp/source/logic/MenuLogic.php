@@ -45,16 +45,15 @@ class MenuLogic extends Logic
 
         //过滤没权限的menu $admin_member==0 为副站长
         if(!$is_founder) {
-            $mod_allow = $role_id==0 ? array() : ObjectCreater::create('AdminPermLogic')->get_allow_mod_by_role($role_id);
-
+            $mod_allow = ObjectCreater::create('AdminPermLogic')->get_allow_mod_by_role($role_id);
+            $site_mod  = $member['domain'] && $member['domain']!='www' ? ObjectCreater::create('SiteLogic')->get_allow_mod_by_domain($member['domain']) : array();
+            
             foreach($menu_list['menu'] as $key => $value) {
                 foreach($value['submenu'] as $k => $v) {
-                    if($role_id!=0 && !in_array($v['mod'], $mod_allow)) {
+                    if(!in_array($v['mod'], $mod_allow) || ($member['domain'] && $member['domain']!='www' && !in_array($v['mod'], $site_mod))) {
                         unset($menu_list['menu'][$key]['submenu'][$k]);
                     }
-                    if($v['mod']=='stationmaster'){
-                    	unset($menu_list['menu'][$key]['submenu'][$k]);
-                    }
+ 
                 }
             }          
         }

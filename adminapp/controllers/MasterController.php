@@ -24,7 +24,9 @@ class MasterController extends AdminController
 
     public function role_list() 
     {
-        $roles = ObjectCreater::create('AdminRoleDao')->range();
+        $domain = $this->logic->get_current_domain();
+        $roles  = ObjectCreater::create('AdminRoleDao')->get_role_list($domain);
+        
         include(APP_ROOT . '/template/master/role_list.php');
     }
 
@@ -41,7 +43,7 @@ class MasterController extends AdminController
 
         $member     = $this->logic->get_current_member();
         $is_founder = $this->logic->check_founder($member);
-        $menu_list  = ObjectCreater::create('MenuLogic')->get_all_menu();
+        $menu_list  = ObjectCreater::create('MenuLogic')->get_perm_menu_list();
 
         include(APP_ROOT . '/template/master/role_edit.php');
     }
@@ -93,7 +95,15 @@ class MasterController extends AdminController
         $exists = ObjectCreater::create('AdminRoleDao')->fetch_by_name($name);
         $this->throw_error(!empty($exists), array('code'=>400, 'message'=>'角色已经存在'));
 
-        ObjectCreater::create('AdminRoleDao')->insert(array('name'=>$name));
+        $data = array('name' => $name);
+
+        $domain = $this->logic->get_current_domain();
+        //站点管理员添加的用户
+        if($domain && $domain!='www'){
+            $data['domain'] = $domain;
+        }
+
+        ObjectCreater::create('AdminRoleDao')->insert($data);
         $this->render_json(array('code'=>200, 'message'=>'添加成功'));
     }
 

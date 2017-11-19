@@ -13,7 +13,9 @@ class AdminMemberDao extends BaseDao
 	//
 	public function get_member_list($domain, $start, $limit)
 	{
-		return $this->_db->fetch_all('SELECT * FROM %t WHERE domain=%s ORDER BY uid DESC LIMIT %d,%d', array($this->_table, $domain, $start, $limit));
+		$where = $domain && $domain!='www' ? 'WHERE domain=%s' : '';
+		$param = $domain && $domain!='www' ? array($this->_table, $domain, $start, $limit) : array($this->_table, $start, $limit);
+		return $this->_db->fetch_all('SELECT * FROM %t '.$where.' ORDER BY uid DESC LIMIT %d,%d', $param);
 	}
 
 	public function update_by_role($role_id, $data) 

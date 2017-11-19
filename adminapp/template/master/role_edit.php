@@ -37,6 +37,9 @@
 
       <?php
       foreach ($menu_list['menu'] as $key => $submenu) {
+          if(empty($submenu['submenu'])){
+            continue;
+          }
       ?>
       <div class="row">
         <div class="panel panel-default">

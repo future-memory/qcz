@@ -26,6 +26,7 @@
         <tr>
             <th>成员用户</th>
             <th>角色</th>
+            <th>domain</th>
             <th>操作</th>
         </tr>
       </thead>
@@ -34,6 +35,7 @@
         <tr>
         <td><?php echo $member['username']; ?></td>
         <td><?php echo in_array($member['username'], $founders) ? 'Master' : (isset($roles[$member['role_id']]) ? $roles[$member['role_id']]['name'] : '-'); ?></td>
+        <td><?php echo $member['domain']; ?></td>
         <td>
           <?php if(in_array($member['username'], $founders)){ ?>
           -

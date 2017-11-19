@@ -9,7 +9,7 @@ $menu = array(
 					'name' => '权限管理',
 					'mod'  => 'master',
 					'url'  => 'index.php?mod=master',
-					'ctrl' => true
+					//'ctrl' => true
 				),
 				array(
 					'name' => '站点管理',

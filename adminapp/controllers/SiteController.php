@@ -76,7 +76,7 @@ class SiteController extends AdminController
             $permed[] = $value['perm'];
         }
 
-        $menu_list  = ObjectCreater::create('MenuLogic')->get_all_menu();
+        $menu_list  = ObjectCreater::create('MenuLogic')->get_perm_menu_list();
 
         include(APP_ROOT . '/template/site/perm.php');
     }
