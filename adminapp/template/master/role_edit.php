@@ -35,6 +35,20 @@
         <h2 style="font-size: 16px;margin:10px 0;">角色：<?php echo $role['name']; ?></h2>
       </div>
 
+      <div class="row">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">基础</h3>
+          </div>
+            <div class="panel-body">
+          <label class="checkbox-inline">
+            <input type="checkbox" name="mods[]" value="_allowpost" <?php echo in_array('_allowpost', $permed) ? 'checked="checked"' : ''; ?> > 可读写，不选此项 将只能查看不可更改记录
+          </label>
+            </div>
+        </div>
+      </div>
+
+
       <?php
       foreach ($menu_list['menu'] as $key => $submenu) {
           if(empty($submenu['submenu'])){

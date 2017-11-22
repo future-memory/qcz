@@ -59,7 +59,8 @@ class MasterController extends AdminController
 
         $this->throw_error(!$id, array('code'=>400, 'message'=>'参数错误'));
 
-        $mod_list = ObjectCreater::create('MenuLogic')->get_mod_list();
+        $mod_list   = ObjectCreater::create('MenuLogic')->get_mod_list();
+        $mod_list[] = '_allowpost';
 
         //把原有的权限清除
         ObjectCreater::create('AdminRolePermDao')->delete_perms_by_role($id);

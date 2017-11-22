@@ -197,7 +197,7 @@ class AdminLogic extends Logic
 		if($checked === false){
 			echo json_encode(array(
 				'code' => 502,
-				'message' => 'no access'
+				'message' => '无权限进行此操作'
 				));
 			exit;
     		// header('Location: /index.php?action=login');
@@ -214,16 +214,14 @@ class AdminLogic extends Logic
 				$role_id = $member['role_id'];
 			}
 
-			if (!$this->check_founder($member) && isset($role_id) && $role_id != 0) {
+			if (!$this->check_founder($member)) {
 				$menu_list = ObjectCreater::create('MenuLogic')->get_perm_menu_list();
 				$menu_mod = ObjectCreater::create('MenuLogic')->get_mod_list();
 				if (!in_array(Nice::app()->getController(), $menu_mod)) {
 					return false;
 				}
 			}
-			if ($role_id == 0 && Nice::app()->getController() === 'stationmaster') {
-				return false;
-			}
+			
 			return $perms['all'];
 		}
 		$mod_allow = array();
@@ -233,13 +231,14 @@ class AdminLogic extends Logic
 			}
 		}
 
-		if (in_array(Nice::app()->getController(), $mod_allow)) {
-			return true;
-		}
 		$is_post = Nice::app()->getComponent('Request')->isPostRequest();
 
-		if(!$is_post && !array_key_exists('_allowpost', $perms)) {
+		if($is_post && !in_array('_allowpost', $mod_allow)) {
 			return false;
+		}
+
+		if(in_array(Nice::app()->getController(), $mod_allow)) {
+			return true;
 		}
 
 		return false;
