@@ -91,9 +91,9 @@ class ShopController extends AdminController
             'C' => '收货人',
             'D' => '电话',
             'E' => '收货地址',
-            'F' => '兑换商品',
+            'F' => '商品',
             'G' => '总计',
-            'H' => '兑换时间',
+            'H' => '时间',
             'I' => '订单状态'
         );
 
