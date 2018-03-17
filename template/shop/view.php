@@ -8,8 +8,8 @@
     <script>
         // mzbbsClient.needWait();
     </script>
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/common-e59771e06c.css">
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/shop/shop-view-9e613b92e9.css">
+    <link rel="stylesheet" href="//res.shop.com/css/common-e59771e06c.css">
+    <link rel="stylesheet" href="//res.shop.com/css/shop/shop-view-9e613b92e9.css">
 </head>
 <body>
     <div class="container" id="container">
@@ -109,8 +109,8 @@
             s.parentNode.insertBefore(hm, s);
         })();
     </script>
-    <script src="//res.qingchuzhang.com/js/shop/vendor-fd0b83775a.js"></script>
+    <script src="//res.shop.com/js/shop/vendor-fd0b83775a.js"></script>
 
-    <script src="//res.qingchuzhang.com/js/shop/show-view-8706da83cd.js"></script>
+    <script src="//res.shop.com/js/shop/show-view-8706da83cd.js"></script>
 </body>
 </html>

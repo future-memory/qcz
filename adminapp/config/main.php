@@ -36,7 +36,7 @@ $main_config = array(
 	),
 	'uc_cookie'=>array(
 			'pre'    => 'QCZ_',
-			'domain' => 'qingchuzhang.com',
+			'domain' => 'shop.com',
 			'path'   => '/',
 	),
 	'components'      => array(

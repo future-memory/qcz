@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>我的煤球</title>
     <meta content="telephone=no" name="format-detection">
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/common-e59771e06c.css">
+    <link rel="stylesheet" href="//res.shop.com/css/common-e59771e06c.css">
     <style>
     .container {
         position: relative;
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-     <script src="//res.qingchuzhang.com/js/lib/zepto-1abd55c514.min.js"></script>
+     <script src="//res.shop.com/js/lib/zepto-1abd55c514.min.js"></script>
     <script>
         (function($){
             var mq = $('#mq');

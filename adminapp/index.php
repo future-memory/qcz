@@ -15,7 +15,7 @@ define('SITE_ROOT', dirname(dirname(__FILE__)));
 
 //应用个性化配置
 //域名
-define('DOMAIN', 'https://www.qingchuzhang.com/');
+define('DOMAIN', 'https://www.shop.com/');
 
 
 //获取配置

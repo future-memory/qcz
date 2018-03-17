@@ -12,7 +12,7 @@
     var phoneScale = parseInt(window.screen.width)/640;
     document.write('<meta name="viewport" content="width=640, minimum-scale = '+ phoneScale +', maximum-scale = '+ phoneScale +'">');
     </script>
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/common-e59771e06c.css">
+    <link rel="stylesheet" href="//res.shop.com/css/common-e59771e06c.css">
     <style>
     html,body {
         background-color: #fafafa;
@@ -104,7 +104,7 @@
     var api_url = '/index.php';
 </script>
 
- <script src="//res.qingchuzhang.com/js/vendor-c2c0ff639e.js"></script>
+ <script src="//res.shop.com/js/vendor-c2c0ff639e.js"></script>
 <script>
     // var bbstoken = '4666iB%2F2%2BybvmSdVnx7ka941MAhYXhFZpG1CHGZfxBxwFpU0ZfFn4qXX6yzY6v1UEd0';
     $(function () {

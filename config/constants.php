@@ -23,6 +23,6 @@ define("PAGE_NOT_FOUND", DOMAIN.'html/error/not_found.html');
 define("PAGE_SYS_ERROR", DOMAIN.'html/error/server_busy.html');
 
 //附件域名
-define('FILE_DOMAIN', 'https://file.qingchuzhang.com/');	// 图片cdn 加速地址
+define('FILE_DOMAIN', 'https://file.shop.com/');	// 图片cdn 加速地址
 //静态资源域名
-define('RES_DOMAIN', 'https://res.qingchuzhang.com/');
+define('RES_DOMAIN', 'https://res.shop.com/');

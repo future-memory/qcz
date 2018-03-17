@@ -9,9 +9,9 @@
         // mzbbsClient.needWait();
     </script>
 
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/common-e59771e06c.css">
-    <link rel="stylesheet" href="//res.qingchuzhang.com/src/static_new/css/thread/swiper.min.css">
-    <link rel="stylesheet" href="//res.qingchuzhang.com/css/shop/shop-index-62d2fbbf64.css">
+    <link rel="stylesheet" href="//res.shop.com/css/common-e59771e06c.css">
+    <link rel="stylesheet" href="//res.shop.com/src/static_new/css/thread/swiper.min.css">
+    <link rel="stylesheet" href="//res.shop.com/css/shop/shop-index-62d2fbbf64.css">
 
 </head>
 <body>
@@ -59,9 +59,9 @@
         var uid = parseInt("<?php echo isset($member['uid']) ? intval($member['uid']) : 0; ?>");
     </script>
 
-    <script src="//res.qingchuzhang.com/js/vendor-c2c0ff639e.js"></script>
+    <script src="//res.shop.com/js/vendor-c2c0ff639e.js"></script>
 
-    <script src="//res.qingchuzhang.com/js/lib/swiper-b184484070.min.js"></script>
-    <script src="//res.qingchuzhang.com/js/shop/shop-index-f60b9ee147.js"></script>
+    <script src="//res.shop.com/js/lib/swiper-b184484070.min.js"></script>
+    <script src="//res.shop.com/js/shop/shop-index-f60b9ee147.js"></script>
 </body>
 </html>

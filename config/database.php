@@ -10,7 +10,7 @@ function get_db_config()
 	$_config['1']['dbpw']      = '';
 	$_config['1']['dbcharset'] = 'utf8';
 	$_config['1']['pconnect']  = '0';
-	$_config['1']['dbname']    = 'qcz';
+	$_config['1']['dbname']    = 'diancan';
 	$_config['1']['tablepre']  = 'pre_';
 
     //db slave
@@ -21,7 +21,7 @@ function get_db_config()
     $_config['slave']['1']['dbpw']      = '';
     $_config['slave']['1']['dbcharset'] = 'utf8';
     $_config['slave']['1']['pconnect']  = '0';
-    $_config['slave']['1']['dbname']    = 'qcz';
+    $_config['slave']['1']['dbname']    = 'diancan';
     $_config['slave']['1']['tablepre']  = 'pre_';    
 
 	return $_config;

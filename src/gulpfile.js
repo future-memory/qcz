@@ -303,7 +303,7 @@ gulp.task('inline', function() { //inline之前要将useref生成的相对路径
 
 //替换模板文件 的外链资源的版本号和cdn路径
 gulp.task('rev:html', function() {
-  var cdn = '//res.qingchuzhang.com/'
+  var cdn = '//res.shop.com/'
   var s = require(paths.dist.static + 'rev-manifest.json');
 
   gulp.src(paths.dist.html + '**/*')
@@ -315,7 +315,7 @@ gulp.task('rev:html', function() {
     }))
 
   //替换inline css中的相对路径
-  .pipe(replace(/(\.\.\/)+/g, '//res.qingchuzhang.com/'))
+  .pipe(replace(/(\.\.\/)+/g, '//res.shop.com/'))
     .pipe(gulp.dest(paths.dist.html));
 });
 
